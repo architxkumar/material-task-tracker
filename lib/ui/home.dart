@@ -112,7 +112,9 @@ class _TaskCreationDialogState extends State<TaskCreationDialog> {
                   const Spacer(),
                   IconButton(
                     tooltip: 'Close',
-                    onPressed: () => _showConfirmationDialog(),
+                    onPressed: () => (_taskTitleController.text.isNotEmpty)
+                        ? _showConfirmationDialog()
+                        : {Navigator.pop(context)},
                     icon: const Icon(Icons.close),
                   ),
                 ],
