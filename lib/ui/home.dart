@@ -46,8 +46,37 @@ class _HomeScreenState extends State<HomeScreen> {
             final List<Task> taskList = snapshot.data ?? [];
             return ListView.builder(
               itemCount: taskList.length,
-              itemBuilder: (context, index) => ListTile(
-                title: Text(taskList[index].content),
+              itemBuilder: (context, index) => Dismissible(
+                onDismissed: (_) async {
+                  final result = await _taskRepository.deleteTask(
+                    taskList[index],
+                  );
+                  if (context.mounted) {
+                    if (result.isSuccess()) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(
+                        const SnackBar(
+                          content: Text('Task deleted'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(
+                        const SnackBar(
+                          content: Text('Failed to delete task'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  }
+                },
+                key: ValueKey(taskList[index].id),
+                child: ListTile(
+                  title: Text(taskList[index].content),
+                ),
               ),
             );
           }
@@ -59,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class TaskCreationDialog extends StatefulWidget {
   final Future<Result<bool>> Function(Task) onTaskCreated;
+
   const TaskCreationDialog({super.key, required this.onTaskCreated});
 
   @override
