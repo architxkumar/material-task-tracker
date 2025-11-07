@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:material_task_tracker/task.dart';
 import 'package:result_dart/result_dart.dart';
-import 'package:task_tracker/task.dart';
 
 class TaskDialog extends StatefulWidget {
   final String widgetLabel;
@@ -76,7 +76,7 @@ class _TaskDialogState extends State<TaskDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(),
+                  const SizedBox(),
                   Text(
                     widget.widgetLabel,
                     style: TextTheme.of(context).titleLarge,

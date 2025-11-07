@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:task_tracker/database.dart';
-import 'package:task_tracker/model.dart';
-import 'package:task_tracker/task.dart';
-import 'package:task_tracker/ui/widget.dart';
+import 'package:material_task_tracker/database.dart';
+import 'package:material_task_tracker/model.dart';
+import 'package:material_task_tracker/task.dart';
+import 'package:material_task_tracker/ui/widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Text('Task Tracker'),
+        title: const Text('Material Task Tracker'),
         centerTitle: true,
       ),
       body: StreamBuilder(

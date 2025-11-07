@@ -1,9 +1,9 @@
-name: task_tracker
+name: material_task_tracker
 description: "A task tracker app built in Flutter"
 
 publish_to: 'none'
 
-version: 0.0.0+1
+version: 0.1.0+1
 
 environment:
   sdk: ^3.9.2
@@ -18,6 +18,7 @@ dependencies:
   path_provider: ^2.1.5
   result_dart: ^2.1.1
   logger: ^2.6.2
+  package_rename: ^1.10.0
 
 dev_dependencies:
   flutter_test:

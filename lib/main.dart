@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_tracker/ui/home.dart';
+import 'package:material_task_tracker/ui/home.dart';
 
 void main() => runApp(const TaskTrackerApp());
 
@@ -11,7 +11,7 @@ class TaskTrackerApp extends StatelessWidget {
     return MaterialApp(
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system,
-      title: 'Task Trackr',
+      title: 'Material Task Tracker',
       home: const HomeScreen(),
     );
   }

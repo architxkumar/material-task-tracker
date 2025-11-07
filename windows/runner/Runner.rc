@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example.tasktracker" "\0"
-            VALUE "FileDescription", "task_tracker" "\0"
+            VALUE "CompanyName", "architxkumar" "\0"
+            VALUE "FileDescription", "Material Task Tracker" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "task_tracker" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.example.tasktracker. All rights reserved." "\0"
-            VALUE "OriginalFilename", "task_tracker.exe" "\0"
-            VALUE "ProductName", "task_tracker" "\0"
+            VALUE "InternalName", "Material Task Tracker" "\0"
+            VALUE "LegalCopyright", "Copyright © 2025 Archit Kumar" "\0"
+            VALUE "OriginalFilename", "material_task_tracker.exe" "\0"
+            VALUE "ProductName", "Material Task Tracker" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
