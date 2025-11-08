@@ -1,16 +1,23 @@
-# task_tracker
+# Material Task Tracker
 
-A task tracker app built in Flutter
+A simple to-do app built with Material Design in Flutter.
+
+## Features
+- Cross-platform: Android, iOS, Linux, macOS, Windows, and Web
+- Material Design UI
+- Task management: add, edit, delete tasks
 
 ## Getting Started
+1. Install [Flutter](https://flutter.dev/docs/get-started/install).
+2. Clone this repository:
+   ```
+   git clone https://github.com/architxkumar/material_task_tracker.git
+   ```
+3. Run the app:
+   ```
+   flutter run
+   ```
 
-This project is a starting point for a Flutter application.
+## License
+[MIT LICENSE](LICENSE)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

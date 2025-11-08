@@ -1,11 +1,11 @@
 {
-    "name": "task_tracker",
-    "short_name": "task_tracker",
+    "name": "Material Task Tracker",
+    "short_name": "Material Task Tracker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A task tracker app built in Flutter",
+    "description": "A to do app built with Material Design in Flutter",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
