@@ -26,7 +26,7 @@ class $TodoItemsTable extends TodoItems
     'content',
   );
   @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
     'content',
     aliasedName,
     false,
@@ -49,7 +49,7 @@ class $TodoItemsTable extends TodoItems
     defaultValue: const Constant(false),
   );
   @override
-  List<GeneratedColumn> get $columns => [id, content, completed];
+  List<GeneratedColumn> get $columns => [id, title, completed];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -68,7 +68,7 @@ class $TodoItemsTable extends TodoItems
     if (data.containsKey('content')) {
       context.handle(
         _contentMeta,
-        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+        title.isAcceptableOrUnknown(data['content']!, _contentMeta),
       );
     } else if (isInserting) {
       context.missing(_contentMeta);
@@ -293,7 +293,7 @@ class $$TodoItemsTableFilterComposer
   );
 
   ColumnFilters<String> get content => $composableBuilder(
-    column: $table.content,
+    column: $table.title,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -318,7 +318,7 @@ class $$TodoItemsTableOrderingComposer
   );
 
   ColumnOrderings<String> get content => $composableBuilder(
-    column: $table.content,
+    column: $table.title,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -341,7 +341,7 @@ class $$TodoItemsTableAnnotationComposer
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get content =>
-      $composableBuilder(column: $table.content, builder: (column) => column);
+      $composableBuilder(column: $table.title, builder: (column) => column);
 
   GeneratedColumn<bool> get completed =>
       $composableBuilder(column: $table.completed, builder: (column) => column);

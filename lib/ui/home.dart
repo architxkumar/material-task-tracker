@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:material_task_tracker/database.dart';
-import 'package:material_task_tracker/model.dart';
-import 'package:material_task_tracker/task.dart';
+import 'package:material_task_tracker/db/database.dart';
+import 'package:material_task_tracker/db/tasks_repository.dart';
+import 'package:material_task_tracker/model/task.dart';
 import 'package:material_task_tracker/ui/widget.dart';
 
 class HomeScreen extends StatefulWidget {

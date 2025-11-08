@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
-import 'package:material_task_tracker/database.dart';
-import 'package:material_task_tracker/database_service.dart';
-import 'package:material_task_tracker/task.dart';
+import 'package:material_task_tracker/db/database.dart';
+import 'package:material_task_tracker/db/database_service.dart';
+import 'package:material_task_tracker/model/task.dart';
 import 'package:result_dart/result_dart.dart';
 
 class TaskRepository {

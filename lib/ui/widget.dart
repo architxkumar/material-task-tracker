@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_task_tracker/task.dart';
+import 'package:material_task_tracker/model/task.dart';
 import 'package:result_dart/result_dart.dart';
 
 class TaskDialog extends StatefulWidget {
