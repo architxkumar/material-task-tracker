@@ -13,7 +13,7 @@ class DatabaseService {
         .into(_database.todoItems)
         .insert(
           TodoItemsCompanion(
-            content: Value(task.content),
+            body: Value(task.body),
             completed: Value(task.completed),
           ),
         );
@@ -25,7 +25,7 @@ class DatabaseService {
       .map(
         (entry) => Task(
           id: entry.id,
-          content: entry.content,
+          body: entry.title,
           completed: entry.completed,
         ),
       )
@@ -39,7 +39,7 @@ class DatabaseService {
             .replace(
               TodoItemsCompanion(
                 id: Value(task.id!),
-                content: Value(task.content),
+                body: Value(task.body),
                 completed: Value(task.completed),
               ),
             );
