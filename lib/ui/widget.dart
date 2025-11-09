@@ -5,6 +5,7 @@ import 'package:result_dart/result_dart.dart';
 class TaskDialog extends StatefulWidget {
   final String widgetLabel;
   final String submitButtonLabel;
+  final int? taskId;
   final String title;
   final bool isCompleted;
   final Future<Result<bool>> Function(Task) onPressingSaveButton;
@@ -13,6 +14,7 @@ class TaskDialog extends StatefulWidget {
     super.key,
     required this.widgetLabel,
     required this.submitButtonLabel,
+    this.taskId,
     this.title = '',
     this.isCompleted = false,
     required this.onPressingSaveButton,
@@ -134,6 +136,7 @@ class _TaskDialogState extends State<TaskDialog> {
                             });
                             try {
                               final Task task = Task(
+                                id: widget.taskId,
                                 title: _taskTitleController.text.trim(),
                                 completed: _isCompleted,
                               );
