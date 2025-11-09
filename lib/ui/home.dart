@@ -82,13 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context) => TaskDialog(
                       widgetLabel: 'Update Task',
                       submitButtonLabel: 'Update',
-                      title: taskList[index].body,
-                      isCompleted: taskList[index].completed,
+                      title: taskList[index].title,
+                      isCompleted: taskList[index].completed ?? false,
                       onPressingSaveButton: _taskRepository.updateTask,
                     ),
                   ),
                   child: ListTile(
-                    title: Text(taskList[index].body),
+                    title: Text(taskList[index].title),
                   ),
                 ),
               ),

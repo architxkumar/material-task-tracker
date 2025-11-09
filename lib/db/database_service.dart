@@ -13,8 +13,17 @@ class DatabaseService {
         .into(_database.todoItems)
         .insert(
           TodoItemsCompanion(
-            body: Value(task.body),
-            completed: Value(task.completed),
+            title: Value(task.title),
+            body: (task.body != null) ? Value(task.body) : const Value.absent(),
+            completed: Value(task.completed ?? false),
+            dueDate: (task.dueDate != null)
+                ? Value(task.dueDate!)
+                : const Value.absent(),
+            createdAt: Value(DateTime.now()),
+            updatedAt: Value(DateTime.now()),
+            sortOrder: (task.sortOrder != null)
+                ? Value(task.sortOrder!)
+                : const Value.absent(),
           ),
         );
   }
@@ -25,8 +34,13 @@ class DatabaseService {
       .map(
         (entry) => Task(
           id: entry.id,
-          body: entry.title,
+          title: entry.title,
+          body: entry.body,
           completed: entry.completed,
+          dueDate: entry.dueDate,
+          createdAt: entry.createdAt,
+          updatedAt: entry.updatedAt,
+          sortOrder: entry.sortOrder,
         ),
       )
       .watch();
@@ -39,8 +53,18 @@ class DatabaseService {
             .replace(
               TodoItemsCompanion(
                 id: Value(task.id!),
-                body: Value(task.body),
-                completed: Value(task.completed),
+                title: Value(task.title),
+                body: (task.body != null)
+                    ? Value(task.body!)
+                    : const Value.absent(),
+                dueDate: (task.dueDate != null)
+                    ? Value(task.dueDate!)
+                    : const Value.absent(),
+                updatedAt: Value(DateTime.now()),
+                sortOrder: (task.sortOrder != null)
+                    ? Value(task.sortOrder!)
+                    : const Value.absent(),
+                completed: Value(task.completed ?? false),
               ),
             );
 

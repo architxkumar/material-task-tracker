@@ -134,7 +134,7 @@ class _TaskDialogState extends State<TaskDialog> {
                             });
                             try {
                               final Task task = Task(
-                                body: _taskTitleController.text.trim(),
+                                title: _taskTitleController.text.trim(),
                                 completed: _isCompleted,
                               );
                               final result = await widget.onPressingSaveButton(
