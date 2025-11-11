@@ -3,6 +3,7 @@ import 'package:material_task_tracker/db/database.dart';
 import 'package:material_task_tracker/db/tasks_repository.dart';
 import 'package:material_task_tracker/model/task.dart';
 import 'package:material_task_tracker/ui/widget.dart';
+import 'package:result_dart/result_dart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,19 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => TaskDialog(
-              widgetLabel: 'Add Task',
-              submitButtonLabel: 'Save',
-              onPressingSaveButton: _taskRepository.insertTask,
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: _buildFloatingActionButton(),
       appBar: AppBar(
         title: const Text('Material Task Tracker'),
         centerTitle: true,
@@ -88,12 +77,78 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressingSaveButton: _taskRepository.updateTask,
                     ),
                   ),
-                  child: ListTile(
-                    title: Text(taskList[index].title),
+                  child: ListEntry(
+                    key: ValueKey(taskList[index].completed),
+                    task: taskList[index],
+                    onChanged: _taskRepository.updateTask,
                   ),
                 ),
               ),
             );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) => TaskDialog(
+            widgetLabel: 'Add Task',
+            submitButtonLabel: 'Save',
+            onPressingSaveButton: _taskRepository.insertTask,
+          ),
+        );
+      },
+      child: const Icon(Icons.add),
+    );
+  }
+}
+
+class ListEntry extends StatefulWidget {
+  final Task task;
+  final Future<Result<bool>> Function(Task) onChanged;
+  const ListEntry({super.key, required this.task, required this.onChanged});
+
+  @override
+  State<ListEntry> createState() => _ListEntryState();
+}
+
+class _ListEntryState extends State<ListEntry> {
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isChecked = widget.task.completed ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(widget.task.title),
+      leading: Checkbox(
+        value: isChecked,
+        onChanged: (value) async {
+          final result = await widget.onChanged(
+            Task(
+              id: widget.task.id,
+              title: widget.task.title,
+              body: widget.task.body,
+              completed: value,
+              dueDate: widget.task.dueDate,
+              createdAt: widget.task.createdAt,
+              updatedAt: DateTime.now(),
+              sortOrder: widget.task.sortOrder,
+            ),
+          );
+          if (result.isSuccess()) {
+            setState(() {
+              isChecked = value ?? false;
+            });
           }
         },
       ),

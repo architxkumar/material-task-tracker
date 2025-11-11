@@ -1,3 +1,6 @@
+// NOTE(self): Some confusion persisted while deciding the nullability of certain fields.
+// For example, should 'completed' be nullable or default to false?
+// The confusion stemmed from the fact that the default values in the db are defined there,
 class Task {
   final int? id;
   final String title;
