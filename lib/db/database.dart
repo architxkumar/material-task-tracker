@@ -13,12 +13,12 @@ class TodoItems extends Table {
     const Constant(false),
   )();
   late final Column<DateTime> dueDate = dateTime().nullable()();
-  // HACK: Making it nullable to avoid issues during migration. In a real app,
-  // this should be non-nullable.
-  late final Column<DateTime> createdAt = dateTime().nullable()();
-  // HACK: Making it nullable to avoid issues during migration. In a real app,
-  // this should be non-nullable.
-  late final Column<DateTime> updatedAt = dateTime().nullable()();
+  late final Column<DateTime> createdAt = dateTime().withDefault(
+    currentDateAndTime,
+  )();
+  late final Column<DateTime> updatedAt = dateTime().withDefault(
+    currentDateAndTime,
+  )();
   late final Column<int> sortOrder = integer().withDefault(
     const Constant(0),
   )();
