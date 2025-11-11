@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:material_task_tracker/db/database.steps.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
@@ -29,25 +28,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
-
-  @override
-  MigrationStrategy get migration => MigrationStrategy(
-    onUpgrade: stepByStep(
-      from1To2: (m, schema) async {
-        await m.renameColumn(
-          schema.todoItems,
-          'content',
-          schema.todoItems.title,
-        );
-        await m.addColumn(schema.todoItems, schema.todoItems.body);
-        await m.addColumn(schema.todoItems, schema.todoItems.sortOrder);
-        await m.addColumn(schema.todoItems, schema.todoItems.dueDate);
-        await m.addColumn(schema.todoItems, schema.todoItems.createdAt);
-        await m.addColumn(schema.todoItems, schema.todoItems.updatedAt);
-      },
-    ),
-  );
+  int get schemaVersion => 1;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
