@@ -3,20 +3,17 @@ import 'package:material_task_tracker/model/task.dart';
 import 'package:result_dart/result_dart.dart';
 
 class TaskDialog extends StatefulWidget {
+  // If task is null, it indicates task creation, else task updation
+  final Task? task;
   final String widgetLabel;
   final String submitButtonLabel;
-  final int? taskId;
-  final String title;
-  final bool isCompleted;
   final Future<Result<bool>> Function(Task) onPressingSaveButton;
 
   const TaskDialog({
     super.key,
     required this.widgetLabel,
     required this.submitButtonLabel,
-    this.taskId,
-    this.title = '',
-    this.isCompleted = false,
+    this.task,
     required this.onPressingSaveButton,
   });
 
@@ -30,13 +27,22 @@ class _TaskDialogState extends State<TaskDialog> {
   bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _taskTitleController = TextEditingController();
+  final TextEditingController _taskBodyController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _isCompleted = widget.isCompleted;
-    _taskTitleController.text = widget.title;
-    _isSubmitButtonEnabled = widget.title.isNotEmpty;
+    _isCompleted = widget.task?.completed ?? false;
+    _taskTitleController.text = widget.task?.title ?? '';
+    _taskBodyController.text = widget.task?.body ?? '';
+    _isSubmitButtonEnabled = widget.task?.title.isNotEmpty ?? false;
+  }
+
+  @override
+  void dispose() {
+    _taskTitleController.dispose();
+    _taskBodyController.dispose();
+    super.dispose();
   }
 
   // FIX: For task updation, if no changes are made, confirmation dialog should not appear
@@ -97,7 +103,7 @@ class _TaskDialogState extends State<TaskDialog> {
                 controller: _taskTitleController,
                 decoration: const InputDecoration(
                   isDense: true,
-                  hintText: 'Add Title',
+                  hintText: 'Title',
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
                 ),
@@ -106,6 +112,16 @@ class _TaskDialogState extends State<TaskDialog> {
                     _isSubmitButtonEnabled = value.trim().isNotEmpty;
                   });
                 },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _taskBodyController,
+                decoration: const InputDecoration(
+                  isDense: true,
+                  hintText: 'Body',
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                ),
               ),
               const SizedBox(height: 16),
               Row(
@@ -136,9 +152,14 @@ class _TaskDialogState extends State<TaskDialog> {
                             });
                             try {
                               final Task task = Task(
-                                id: widget.taskId,
+                                id: widget.task?.id ?? 0,
                                 title: _taskTitleController.text.trim(),
+                                body: _taskBodyController.text.trim(),
                                 completed: _isCompleted,
+                                createdAt:
+                                    widget.task?.createdAt ?? DateTime.now(),
+                                updatedAt: DateTime.now(),
+                                sortOrder: widget.task?.sortOrder ?? 0,
                               );
                               final result = await widget.onPressingSaveButton(
                                 task,

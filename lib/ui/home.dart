@@ -71,9 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context) => TaskDialog(
                       widgetLabel: 'Update Task',
                       submitButtonLabel: 'Update',
-                      taskId: taskList[index].id,
-                      title: taskList[index].title,
-                      isCompleted: taskList[index].completed ?? false,
+                      task: taskList[index],
                       onPressingSaveButton: _taskRepository.updateTask,
                     ),
                   ),
@@ -123,13 +121,20 @@ class _ListEntryState extends State<ListEntry> {
   @override
   void initState() {
     super.initState();
-    isChecked = widget.task.completed ?? false;
+    isChecked = widget.task.completed;
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.task.title),
+      title: Text(
+        widget.task.title,
+        style: TextStyle(
+          decoration: isChecked
+              ? TextDecoration.lineThrough
+              : TextDecoration.none,
+        ),
+      ),
       leading: Checkbox(
         value: isChecked,
         onChanged: (value) async {
@@ -138,7 +143,7 @@ class _ListEntryState extends State<ListEntry> {
               id: widget.task.id,
               title: widget.task.title,
               body: widget.task.body,
-              completed: value,
+              completed: value ?? false,
               dueDate: widget.task.dueDate,
               createdAt: widget.task.createdAt,
               updatedAt: DateTime.now(),

@@ -73,9 +73,10 @@ class $TodoItemsTable extends TodoItems
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -84,9 +85,10 @@ class $TodoItemsTable extends TodoItems
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _sortOrderMeta = const VerificationMeta(
     'sortOrder',
@@ -202,11 +204,11 @@ class $TodoItemsTable extends TodoItems
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      ),
+      )!,
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
-      ),
+      )!,
       sortOrder: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}sort_order'],
@@ -226,8 +228,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
   final String? body;
   final bool completed;
   final DateTime? dueDate;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   final int sortOrder;
   const TodoItem({
     required this.id,
@@ -235,8 +237,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     this.body,
     required this.completed,
     this.dueDate,
-    this.createdAt,
-    this.updatedAt,
+    required this.createdAt,
+    required this.updatedAt,
     required this.sortOrder,
   });
   @override
@@ -251,12 +253,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     if (!nullToAbsent || dueDate != null) {
       map['due_date'] = Variable<DateTime>(dueDate);
     }
-    if (!nullToAbsent || createdAt != null) {
-      map['created_at'] = Variable<DateTime>(createdAt);
-    }
-    if (!nullToAbsent || updatedAt != null) {
-      map['updated_at'] = Variable<DateTime>(updatedAt);
-    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     map['sort_order'] = Variable<int>(sortOrder);
     return map;
   }
@@ -270,12 +268,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       dueDate: dueDate == null && nullToAbsent
           ? const Value.absent()
           : Value(dueDate),
-      createdAt: createdAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdAt),
-      updatedAt: updatedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(updatedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
       sortOrder: Value(sortOrder),
     );
   }
@@ -291,8 +285,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       body: serializer.fromJson<String?>(json['body']),
       completed: serializer.fromJson<bool>(json['completed']),
       dueDate: serializer.fromJson<DateTime?>(json['dueDate']),
-      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       sortOrder: serializer.fromJson<int>(json['sortOrder']),
     );
   }
@@ -305,8 +299,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       'body': serializer.toJson<String?>(body),
       'completed': serializer.toJson<bool>(completed),
       'dueDate': serializer.toJson<DateTime?>(dueDate),
-      'createdAt': serializer.toJson<DateTime?>(createdAt),
-      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'sortOrder': serializer.toJson<int>(sortOrder),
     };
   }
@@ -317,8 +311,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     Value<String?> body = const Value.absent(),
     bool? completed,
     Value<DateTime?> dueDate = const Value.absent(),
-    Value<DateTime?> createdAt = const Value.absent(),
-    Value<DateTime?> updatedAt = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
     int? sortOrder,
   }) => TodoItem(
     id: id ?? this.id,
@@ -326,8 +320,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     body: body.present ? body.value : this.body,
     completed: completed ?? this.completed,
     dueDate: dueDate.present ? dueDate.value : this.dueDate,
-    createdAt: createdAt.present ? createdAt.value : this.createdAt,
-    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
     sortOrder: sortOrder ?? this.sortOrder,
   );
   TodoItem copyWithCompanion(TodoItemsCompanion data) {
@@ -389,8 +383,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
   final Value<String?> body;
   final Value<bool> completed;
   final Value<DateTime?> dueDate;
-  final Value<DateTime?> createdAt;
-  final Value<DateTime?> updatedAt;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   final Value<int> sortOrder;
   const TodoItemsCompanion({
     this.id = const Value.absent(),
@@ -440,8 +434,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     Value<String?>? body,
     Value<bool>? completed,
     Value<DateTime?>? dueDate,
-    Value<DateTime?>? createdAt,
-    Value<DateTime?>? updatedAt,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
     Value<int>? sortOrder,
   }) {
     return TodoItemsCompanion(
@@ -520,8 +514,8 @@ typedef $$TodoItemsTableCreateCompanionBuilder =
       Value<String?> body,
       Value<bool> completed,
       Value<DateTime?> dueDate,
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> sortOrder,
     });
 typedef $$TodoItemsTableUpdateCompanionBuilder =
@@ -531,8 +525,8 @@ typedef $$TodoItemsTableUpdateCompanionBuilder =
       Value<String?> body,
       Value<bool> completed,
       Value<DateTime?> dueDate,
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> sortOrder,
     });
 
@@ -703,8 +697,8 @@ class $$TodoItemsTableTableManager
                 Value<String?> body = const Value.absent(),
                 Value<bool> completed = const Value.absent(),
                 Value<DateTime?> dueDate = const Value.absent(),
-                Value<DateTime?> createdAt = const Value.absent(),
-                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> sortOrder = const Value.absent(),
               }) => TodoItemsCompanion(
                 id: id,
@@ -723,8 +717,8 @@ class $$TodoItemsTableTableManager
                 Value<String?> body = const Value.absent(),
                 Value<bool> completed = const Value.absent(),
                 Value<DateTime?> dueDate = const Value.absent(),
-                Value<DateTime?> createdAt = const Value.absent(),
-                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> sortOrder = const Value.absent(),
               }) => TodoItemsCompanion.insert(
                 id: id,

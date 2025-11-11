@@ -11,6 +11,7 @@ class TaskRepository {
     _databaseService = DatabaseService(appDatabase);
   }
 
+  /// Returns true if the task was inserted successfully
   Future<Result<bool>> insertTask(Task task) async {
     try {
       await _databaseService.insertTask(task);
@@ -22,8 +23,10 @@ class TaskRepository {
     }
   }
 
+  /// Returns stream of the tasks in the database
   Stream<List<Task>> getTasksList() => _databaseService.watchAllTasks();
 
+  /// Returns true if the task was updated successfully
   Future<Result<bool>> updateTask(Task task) async {
     try {
       final bool result = await _databaseService.updateTask(task);
@@ -40,7 +43,7 @@ class TaskRepository {
     }
   }
 
-  /// Returns `true` if task was successfully
+  /// Returns true if the task was deleted successfully
   Future<Result<bool>> deleteTask(Task task) async {
     try {
       final int result = await _databaseService.deleteTask(task);

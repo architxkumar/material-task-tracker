@@ -7,23 +7,21 @@ class DatabaseService {
 
   DatabaseService(AppDatabase appDatabase) : _database = appDatabase;
 
-  /// Returns the `id` of the task after insertion
-  Future<int> insertTask(Task task) async {
+  /// Returns the `id` of the inserted task
+  Future<int> insertTask(Task task) {
     return _database
         .into(_database.todoItems)
         .insert(
           TodoItemsCompanion(
             title: Value(task.title),
-            body: (task.body != null) ? Value(task.body) : const Value.absent(),
-            completed: Value(task.completed ?? false),
-            dueDate: (task.dueDate != null)
-                ? Value(task.dueDate!)
-                : const Value.absent(),
+            body: task.body == null ? const Value.absent() : Value(task.body!),
+            completed: Value(task.completed),
+            dueDate: task.dueDate == null
+                ? const Value.absent()
+                : Value(task.dueDate!),
             createdAt: Value(DateTime.now()),
             updatedAt: Value(DateTime.now()),
-            sortOrder: (task.sortOrder != null)
-                ? Value(task.sortOrder!)
-                : const Value.absent(),
+            sortOrder: Value(task.sortOrder),
           ),
         );
   }
@@ -46,33 +44,24 @@ class DatabaseService {
       .watch();
 
   /// Returns `true` if any row was affected by the operation
-  Future<bool> updateTask(Task task) async => (task.id == null)
-      ? false
-      : await _database
-            .update(_database.todoItems)
-            .replace(
-              TodoItemsCompanion(
-                id: Value(task.id!),
-                title: Value(task.title),
-                body: (task.body != null)
-                    ? Value(task.body!)
-                    : const Value.absent(),
-                dueDate: (task.dueDate != null)
-                    ? Value(task.dueDate!)
-                    : const Value.absent(),
-                updatedAt: Value(DateTime.now()),
-                sortOrder: (task.sortOrder != null)
-                    ? Value(task.sortOrder!)
-                    : const Value.absent(),
-                completed: Value(task.completed ?? false),
-              ),
-            );
+  Future<bool> updateTask(Task task) => _database
+      .update(_database.todoItems)
+      .replace(
+        TodoItemsCompanion(
+          id: Value(task.id),
+          title: Value(task.title),
+          body: (task.body != null) ? Value(task.body!) : const Value.absent(),
+          dueDate: (task.dueDate != null)
+              ? Value(task.dueDate!)
+              : const Value.absent(),
+          updatedAt: Value(DateTime.now()),
+          sortOrder: Value(task.sortOrder),
+          completed: Value(task.completed),
+        ),
+      );
 
-  /// Returns the `id` of the task after deletion
-  Future<int> deleteTask(Task task) async => (task.id == null)
-      ? 0
-      : await (_database.delete(_database.todoItems)..where(
-              (tbl) => tbl.id.isValue(task.id!),
-            ))
-            .go();
+  /// Returns the amount of rows affected after deletion
+  Future<int> deleteTask(Task task) => (_database.delete(
+    _database.todoItems,
+  )..where((tbl) => tbl.id.isValue(task.id))).go();
 }

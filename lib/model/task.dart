@@ -1,24 +1,74 @@
-// NOTE(self): Some confusion persisted while deciding the nullability of certain fields.
-// For example, should 'completed' be nullable or default to false?
-// The confusion stemmed from the fact that the default values in the db are defined there,
-class Task {
-  final int? id;
-  final String title;
-  final String? body;
-  final bool? completed;
-  final DateTime? dueDate;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final int? sortOrder;
+// NOTE(architxkumar): Null fields inside this model represents optional fields in the database.
 
+/// Task models a task in the database.
+///
+/// For inserting a new task, the [id] field can be left as default (0).
+///
+/// Null fields correspond to optional database columns.
+class Task {
+  /// Database id of the task. `0` indicates an unset/new task.
+  final int id;
+
+  /// Short, human-readable title of the task.
+  final String title;
+
+  /// Optional detailed description or notes for the task.
+  final String? body;
+
+  /// Whether the task is completed.
+  final bool completed;
+
+  /// Optional due date/time for the task.
+  final DateTime? dueDate;
+
+  /// Timestamp when the task was created (set by the server/db).
+  final DateTime createdAt;
+
+  /// Timestamp when the task was last updated (set by the server/db).
+  final DateTime updatedAt;
+
+  /// Integer used to order tasks in lists.
+  final int sortOrder;
+
+  /// Creates a new `Task`.
+  ///
+  /// - `id` defaults to `0` for new/unsaved tasks.
+  /// - `title`, `createdAt`, `updatedAt`, and `sortOrder` are required.
+  /// - `body` and `dueDate` are optional.
+  /// - `completed` defaults to `false`.
   Task({
-    this.id,
+    this.id = 0,
     required this.title,
     this.body,
-    this.completed,
+    this.completed = false,
     this.dueDate,
-    this.createdAt,
-    this.updatedAt,
-    this.sortOrder,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.sortOrder,
   });
+
+  /// Returns a copy of this [Task] with provided fields replaced.
+  ///
+  /// Any argument left `null` (or omitted) retains the original value.
+  Task copyWith({
+    int? id,
+    String? title,
+    String? body,
+    bool? completed,
+    DateTime? dueDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? sortOrder,
+  }) {
+    return Task(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      completed: completed ?? this.completed,
+      dueDate: dueDate ?? this.dueDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      sortOrder: sortOrder ?? this.sortOrder,
+    );
+  }
 }
