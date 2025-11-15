@@ -35,53 +35,71 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           } else {
             final List<Task> taskList = snapshot.data ?? [];
-            return ListView.builder(
-              itemCount: taskList.length,
-              itemBuilder: (context, index) => Dismissible(
-                onDismissed: (_) async {
-                  final result = await _taskRepository.deleteTask(
-                    taskList[index],
-                  );
-                  if (context.mounted) {
-                    if (result.isSuccess()) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(
-                        const SnackBar(
-                          content: Text('Task deleted'),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(
-                        const SnackBar(
-                          content: Text('Failed to delete task'),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    }
-                  }
-                },
-                key: ValueKey(taskList[index].id),
-                child: GestureDetector(
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => TaskDialog(
-                      widgetLabel: 'Update Task',
-                      submitButtonLabel: 'Update',
-                      task: taskList[index],
-                      onPressingSaveButton: _taskRepository.updateTask,
-                    ),
-                  ),
-                  child: ListEntry(
-                    key: ValueKey(taskList[index].completed),
-                    task: taskList[index],
-                    onChanged: _taskRepository.updateTask,
+            final int totalTaskCount = taskList.length;
+            final int completedTaskCount = taskList
+                .where((element) => element.completed == true)
+                .length;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Completed $completedTaskCount out of $totalTaskCount tasks',
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
                 ),
-              ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: taskList.length,
+                    itemBuilder: (context, index) => Dismissible(
+                      onDismissed: (_) async {
+                        final result = await _taskRepository.deleteTask(
+                          taskList[index],
+                        );
+                        if (context.mounted) {
+                          if (result.isSuccess()) {
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(
+                              const SnackBar(
+                                content: Text('Task deleted'),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(
+                              const SnackBar(
+                                content: Text('Failed to delete task'),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      key: ValueKey(taskList[index].id),
+                      child: GestureDetector(
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => TaskDialog(
+                            widgetLabel: 'Update Task',
+                            submitButtonLabel: 'Update',
+                            task: taskList[index],
+                            onPressingSaveButton: _taskRepository.updateTask,
+                          ),
+                        ),
+                        child: ListEntry(
+                          key: ValueKey(taskList[index].completed),
+                          task: taskList[index],
+                          onChanged: _taskRepository.updateTask,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             );
           }
         },
@@ -109,6 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
 class ListEntry extends StatefulWidget {
   final Task task;
   final Future<Result<bool>> Function(Task) onChanged;
+
   const ListEntry({super.key, required this.task, required this.onChanged});
 
   @override
