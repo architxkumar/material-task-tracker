@@ -26,21 +26,21 @@ class _TaskDialogState extends State<TaskDialog> {
   bool _isSubmitButtonEnabled = false;
   bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _taskTitleController = TextEditingController();
+  final TextEditingController _titleFieldController = TextEditingController();
   final TextEditingController _taskBodyController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _isCompleted = widget.task?.completed ?? false;
-    _taskTitleController.text = widget.task?.title ?? '';
+    _titleFieldController.text = widget.task?.title ?? '';
     _taskBodyController.text = widget.task?.body ?? '';
     _isSubmitButtonEnabled = widget.task?.title.isNotEmpty ?? false;
   }
 
   @override
   void dispose() {
-    _taskTitleController.dispose();
+    _titleFieldController.dispose();
     _taskBodyController.dispose();
     super.dispose();
   }
@@ -91,7 +91,7 @@ class _TaskDialogState extends State<TaskDialog> {
                   ),
                   IconButton(
                     tooltip: 'Close',
-                    onPressed: () => (_taskTitleController.text.isNotEmpty)
+                    onPressed: () => (_titleFieldController.text.isNotEmpty)
                         ? _showConfirmationDialog()
                         : {Navigator.pop(context)},
                     icon: const Icon(Icons.close),
@@ -100,7 +100,7 @@ class _TaskDialogState extends State<TaskDialog> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _taskTitleController,
+                controller: _titleFieldController,
                 decoration: const InputDecoration(
                   isDense: true,
                   hintText: 'Title',
@@ -144,7 +144,7 @@ class _TaskDialogState extends State<TaskDialog> {
                 children: [
                   IconButton(
                     onPressed: () {},
-                    icon: Icon(Icons.notification_add),
+                    icon: const Icon(Icons.notification_add),
                   ),
                   const Spacer(),
                   FilledButton(
@@ -157,7 +157,7 @@ class _TaskDialogState extends State<TaskDialog> {
                             try {
                               final Task task = Task(
                                 id: widget.task?.id ?? 0,
-                                title: _taskTitleController.text.trim(),
+                                title: _titleFieldController.text.trim(),
                                 body: _taskBodyController.text.trim(),
                                 completed: _isCompleted,
                                 createdAt:
@@ -177,7 +177,7 @@ class _TaskDialogState extends State<TaskDialog> {
                               }
                             } finally {
                               if (context.mounted) {
-                                _taskTitleController.clear();
+                                _titleFieldController.clear();
                                 setState(() {
                                   _isSubmitButtonEnabled = true;
                                   _isLoading = false;

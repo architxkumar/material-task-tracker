@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:material_task_tracker/data/repository/tasks_repository.dart';
 import 'package:material_task_tracker/data/source/db/database.dart';
-import 'package:material_task_tracker/ui/view/home.dart';
-import 'package:material_task_tracker/ui/view_model/home.dart';
+import 'package:material_task_tracker/ui/home/home_screen.dart';
+import 'package:material_task_tracker/ui/home/home_view_model.dart';
 import 'package:provider/provider.dart';
 
 void main() {
