@@ -1,7 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:material_task_tracker/ui/home.dart';
+import 'package:logger/logger.dart';
+import 'package:material_task_tracker/data/repository/tasks_repository.dart';
+import 'package:material_task_tracker/data/source/db/database.dart';
+import 'package:material_task_tracker/ui/view/home.dart';
+import 'package:material_task_tracker/ui/view_model/home.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(const TaskTrackerApp());
+void main() {
+  final Logger logger = Logger();
+  final AppDatabase appDatabase = AppDatabase();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => HomeViewModel(TaskRepository(appDatabase, logger)),
+        ),
+      ],
+      child: const TaskTrackerApp(),
+    ),
+  );
+}
 
 class TaskTrackerApp extends StatelessWidget {
   const TaskTrackerApp({super.key});

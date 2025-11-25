@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_task_tracker/model/task.dart';
+import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:result_dart/result_dart.dart';
 
 class TaskDialog extends StatefulWidget {
@@ -142,6 +142,10 @@ class _TaskDialogState extends State<TaskDialog> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.notification_add),
+                  ),
                   const Spacer(),
                   FilledButton(
                     onPressed: (_isSubmitButtonEnabled)

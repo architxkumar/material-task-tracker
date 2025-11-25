@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:material_task_tracker/db/database.dart';
-import 'package:material_task_tracker/model/task.dart';
+import 'package:material_task_tracker/data/source/db/database.dart';
+import 'package:material_task_tracker/domain/model/task.dart';
 
 class DatabaseService {
   final AppDatabase _database;

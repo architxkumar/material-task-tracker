@@ -1,44 +1,58 @@
 import 'package:logger/logger.dart';
-import 'package:material_task_tracker/db/database.dart';
-import 'package:material_task_tracker/db/database_service.dart';
-import 'package:material_task_tracker/model/task.dart';
+import 'package:material_task_tracker/data/service/database_service.dart';
+import 'package:material_task_tracker/data/source/db/database.dart';
+import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:result_dart/result_dart.dart';
 
 class TaskRepository {
-  late final DatabaseService _databaseService;
+  final DatabaseService _databaseService;
 
-  TaskRepository(AppDatabase appDatabase) {
-    _databaseService = DatabaseService(appDatabase);
-  }
+  final Logger _logger;
+
+  TaskRepository(AppDatabase appDatabase, Logger logger)
+    : _databaseService = DatabaseService(appDatabase),
+      _logger = logger;
 
   /// Returns true if the task was inserted successfully
   Future<Result<bool>> insertTask(Task task) async {
     try {
       await _databaseService.insertTask(task);
-      logger.i('Task added successfully');
+      _logger.i('Task added successfully');
       return const Success(true);
     } catch (e, s) {
-      logger.e('Error adding task', error: e, stackTrace: s);
+      _logger.e('Error adding task', error: e, stackTrace: s);
       return Failure(Exception(false));
     }
   }
 
   /// Returns stream of the tasks in the database
-  Stream<List<Task>> getTasksList() => _databaseService.watchAllTasks();
+  Stream<List<Task>> getTasksStream() {
+    _logger.i('Watching task list');
+    return _databaseService.watchAllTasks().handleError((
+      Object error,
+      StackTrace stackTrace,
+    ) {
+      _logger.e(
+        'Error watching task list',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    });
+  }
 
   /// Returns true if the task was updated successfully
   Future<Result<bool>> updateTask(Task task) async {
     try {
       final bool result = await _databaseService.updateTask(task);
       if (result) {
-        logger.i('Task updated successfully');
+        _logger.i('Task updated successfully');
         return const Success(true);
       } else {
-        logger.w('No rows affected');
+        _logger.w('No rows affected');
         return const Success(false);
       }
     } catch (e, s) {
-      logger.e('Error updating Task', error: e, stackTrace: s);
+      _logger.e('Error updating Task', error: e, stackTrace: s);
       return (e is Exception) ? Failure(e) : Failure(Exception(e.toString()));
     }
   }
@@ -48,17 +62,15 @@ class TaskRepository {
     try {
       final int result = await _databaseService.deleteTask(task);
       if (result != 0) {
-        logger.i('Task deleted successfully');
+        _logger.i('Task deleted successfully');
         return const Success(true);
       } else {
-        logger.w('No rows affected');
+        _logger.w('No rows affected');
         return const Success(false);
       }
     } catch (e, s) {
-      logger.e('Error deleting Task', error: e, stackTrace: s);
+      _logger.e('Error deleting Task', error: e, stackTrace: s);
       return (e is Exception) ? Failure(e) : Failure(Exception(e.toString()));
     }
   }
 }
-
-final logger = Logger();
