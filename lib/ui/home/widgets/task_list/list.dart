@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:material_task_tracker/ui/home/home_view_model.dart';
-import 'package:material_task_tracker/ui/home/task_dialog.dart';
-import 'package:material_task_tracker/ui/home/widgets/task_list_entry.dart';
+import 'package:material_task_tracker/ui/home/widgets/task_list/entry.dart';
 import 'package:provider/provider.dart';
 
 class TaskList extends StatelessWidget {
@@ -45,15 +44,7 @@ class TaskList extends StatelessWidget {
 
           key: ValueKey(taskList[index].id),
           child: GestureDetector(
-            onTap: () => showDialog(
-              context: context,
-              builder: (context) => TaskDialog(
-                widgetLabel: 'Update Task',
-                submitButtonLabel: 'Update',
-                task: taskList[index],
-                onPressingSaveButton: context.read<HomeViewModel>().updateTask,
-              ),
-            ),
+            onTap: () {},
             child: TaskListEntry(
               key: ValueKey(taskList[index].completed),
               task: taskList[index],

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:material_task_tracker/ui/home/home_view_model.dart';
-import 'package:material_task_tracker/ui/home/widgets/add_task_button.dart';
-import 'package:material_task_tracker/ui/home/widgets/task_list.dart';
-import 'package:material_task_tracker/ui/home/widgets/task_summary_header.dart';
+import 'package:material_task_tracker/ui/home/widgets/task_creation/button.dart';
+import 'package:material_task_tracker/ui/home/widgets/task_list/list.dart';
+import 'package:material_task_tracker/ui/home/widgets/task_list/summary_header.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {

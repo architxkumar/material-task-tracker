@@ -25,6 +25,17 @@ class TaskRepository {
     }
   }
 
+  Future<Result<List<Task>>> getAllTasks() async {
+    try {
+      final tasks = await _databaseService.getAllTasks();
+      _logger.i('Fetched all tasks successfully');
+      return Success(tasks);
+    } catch (e, s) {
+      _logger.e('Error fetching all tasks', error: e, stackTrace: s);
+      return (e is Exception) ? Failure(e) : Failure(Exception(e.toString()));
+    }
+  }
+
   /// Returns stream of the tasks in the database
   Stream<List<Task>> getTasksStream() {
     _logger.i('Watching task list');

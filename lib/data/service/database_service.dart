@@ -43,6 +43,22 @@ class DatabaseService {
       )
       .watch();
 
+  Future<List<Task>> getAllTasks() => _database
+      .select(_database.todoItems)
+      .map(
+        (entry) => Task(
+          id: entry.id,
+          title: entry.title,
+          body: entry.body,
+          completed: entry.completed,
+          dueDate: entry.dueDate,
+          createdAt: entry.createdAt,
+          updatedAt: entry.updatedAt,
+          sortOrder: entry.sortOrder,
+        ),
+      )
+      .get();
+
   /// Returns `true` if any row was affected by the operation
   Future<bool> updateTask(Task task) => _database
       .update(_database.todoItems)
