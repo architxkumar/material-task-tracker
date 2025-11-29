@@ -10,51 +10,57 @@ class TaskList extends StatelessWidget {
 
   const TaskList({super.key, required this.taskList});
 
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  Future<void> _handleTaskTap(BuildContext context, Task task) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TaskDetailScreen(
+          task: task,
+        ),
+      ),
+    );
+    if (context.mounted) {
+      if (result == true) {
+        _showSnackBar(context, 'Task deleted');
+      } else {
+        _showSnackBar(context, 'Failed to delete task');
+      }
+    }
+  }
+
+  Future<void> _handleTaskDismiss(BuildContext context, Task task) async {
+    final result = await context.read<HomeViewModel>().deleteTask(task);
+    if (context.mounted) {
+      if (result.isSuccess()) {
+        _showSnackBar(context, 'Task deleted');
+      } else {
+        _showSnackBar(context, 'Failed to delete task');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
         itemCount: taskList.length,
         itemBuilder: (context, index) => Dismissible(
-          onDismissed: (_) async {
-            final result = await context.read<HomeViewModel>().deleteTask(
-              taskList[index],
-            );
-            if (context.mounted) {
-              if (result.isSuccess()) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(
-                  const SnackBar(
-                    content: Text('Task deleted'),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              } else {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(
-                  const SnackBar(
-                    content: Text('Failed to delete task'),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              }
-            }
-          },
-
+          onDismissed: (_) async =>
+              await _handleTaskDismiss(context, taskList[index]),
           key: ValueKey(taskList[index].id),
           child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TaskDetailScreen(
-                    task: taskList[index],
-                  ),
-                ),
-              );
-            },
+            onTap: () async => await _handleTaskTap(context, taskList[index]),
             child: TaskListEntry(
               key: ValueKey(taskList[index].completed),
               task: taskList[index],
