@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class TaskMetaDataEntry extends StatelessWidget {
+class TaskDetailMetadataEntry extends StatelessWidget {
   final IconData icon;
   final String body;
   final String label;
 
-  const TaskMetaDataEntry({
+  const TaskDetailMetadataEntry({
     super.key,
     required this.icon,
     required this.body,

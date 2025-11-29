@@ -4,6 +4,7 @@ import 'package:material_task_tracker/data/repository/tasks_repository.dart';
 import 'package:material_task_tracker/data/source/db/database.dart';
 import 'package:material_task_tracker/ui/home/home_screen.dart';
 import 'package:material_task_tracker/ui/home/home_view_model.dart';
+import 'package:material_task_tracker/ui/task_detail/task_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -14,6 +15,10 @@ void main() {
       providers: [
         ChangeNotifierProvider(
           create: (_) => HomeViewModel(TaskRepository(appDatabase, logger)),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              TaskDetailViewModel(TaskRepository(appDatabase, logger)),
         ),
       ],
       child: const TaskTrackerApp(),

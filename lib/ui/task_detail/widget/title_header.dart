@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:material_task_tracker/ui/task_detail/task_detail_view_model.dart';
+import 'package:provider/provider.dart';
 
-class TaskScreenBodyHeaderCard extends StatelessWidget {
-  final String taskTitle;
-  const TaskScreenBodyHeaderCard({super.key, required this.taskTitle});
+class TaskDetailTitleHeader extends StatelessWidget {
+  const TaskDetailTitleHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class TaskScreenBodyHeaderCard extends StatelessWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Text(
-                  taskTitle,
+                  context.watch<TaskDetailViewModel>().task.title,
                   maxLines: 1,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),

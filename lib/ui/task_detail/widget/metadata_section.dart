@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:material_task_tracker/domain/model/task.dart';
-import 'package:material_task_tracker/ui/task/widget/task_metadata_entry.dart';
+import 'package:material_task_tracker/ui/task_detail/task_detail_view_model.dart';
+import 'package:material_task_tracker/ui/task_detail/widget/metadata_entry.dart'
+    as metadata_section;
+import 'package:provider/provider.dart';
 
-class TaskMetadataBody extends StatelessWidget {
-  final Task task;
-  const TaskMetadataBody({super.key, required this.task});
+class TaskDetailMetadataSection extends StatelessWidget {
+  const TaskDetailMetadataSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final task = context.watch<TaskDetailViewModel>().task;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -15,20 +17,20 @@ class TaskMetadataBody extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           spacing: 16.0,
           children: [
-            TaskMetaDataEntry(
+            metadata_section.TaskDetailMetadataEntry(
               icon: Icons.calendar_today,
               body: task.dueDate != null
                   ? '${task.dueDate!.day}/${task.dueDate!.month}/${task.dueDate!.year}'
                   : 'No due date',
               label: 'Due Date',
             ),
-            TaskMetaDataEntry(
+            metadata_section.TaskDetailMetadataEntry(
               icon: Icons.add_circle_outline,
               body:
                   '${task.createdAt.day}/${task.createdAt.month}/${task.createdAt.year} ${task.createdAt.hour}:${task.createdAt.minute.toString().padLeft(2, '0')}',
               label: 'Created At',
             ),
-            TaskMetaDataEntry(
+            metadata_section.TaskDetailMetadataEntry(
               icon: Icons.update,
               body:
                   '${task.updatedAt.day}/${task.updatedAt.month}/${task.updatedAt.year} ${task.updatedAt.hour}:${task.updatedAt.minute.toString().padLeft(2, '0')}',

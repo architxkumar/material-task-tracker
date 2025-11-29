@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:material_task_tracker/ui/task_detail/task_detail_view_model.dart';
+import 'package:provider/provider.dart';
 
-class TaskDetailBodyContent extends StatelessWidget {
-  final String content;
-  const TaskDetailBodyContent({super.key, required this.content});
+class TaskDetailDescriptionSection extends StatelessWidget {
+  const TaskDetailDescriptionSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,10 @@ class TaskDetailBodyContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Notes', style: Theme.of(context).textTheme.titleMedium),
-              Text(content),
+              Text(
+                context.watch<TaskDetailViewModel>().task.body ??
+                    'No description provided.',
+              ),
             ],
           ),
         ),
