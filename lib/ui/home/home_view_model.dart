@@ -23,6 +23,14 @@ class HomeViewModel extends ChangeNotifier {
 
   Stream<List<Task>> get taskStream => _taskRepository.getTasksStream();
 
+  Stream<int> get completedTaskCount => _taskRepository.getTasksStream().map(
+    (tasks) => tasks.where((task) => task.completed).length,
+  );
+
+  Stream<int> get pendingTaskCount => _taskRepository.getTasksStream().map(
+    (tasks) => tasks.where((task) => !task.completed).length,
+  );
+
   Future<int> nextSortOrder() async {
     final ResultDart<List<Task>, Exception> result = await _taskRepository
         .getAllTasks();
@@ -38,6 +46,9 @@ class HomeViewModel extends ChangeNotifier {
       return 0;
     }
   }
+
+  Future<List<Task>> getAllTasks() =>
+      _taskRepository.getAllTasks().then((result) => result.getOrDefault([]));
 
   Future<Result<bool>> deleteTask(Task task) =>
       _taskRepository.deleteTask(task);

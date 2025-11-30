@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:material_task_tracker/data/repository/tasks_repository.dart';
 import 'package:material_task_tracker/data/source/db/database.dart';
-import 'package:material_task_tracker/ui/home/home_screen.dart';
+import 'package:material_task_tracker/ui/home/home_screen_state_resolver.dart';
 import 'package:material_task_tracker/ui/home/home_view_model.dart';
 import 'package:material_task_tracker/ui/task_detail/task_detail_view_model.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +36,7 @@ class TaskTrackerApp extends StatelessWidget {
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system,
       title: 'Material Task Tracker',
-      home: const HomeScreen(),
+      home: const HomeScreenStateResolver(),
     );
   }
 }
