@@ -21,6 +21,7 @@ class HomeViewModel extends ChangeNotifier {
 
   TaskCreationDraft get taskCreationDraft => _taskCreationDraft;
 
+  // Note: No manual pull to refresh is needed as the stream will emit new values automatically
   Stream<List<Task>> get taskStream => _taskRepository.getTasksStream();
 
   Stream<int> get completedTaskCount => _taskRepository.getTasksStream().map(
