@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_task_tracker/data/repository/tasks_repository.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
+import 'package:material_task_tracker/ui/home/model/app_bar.dart';
 import 'package:material_task_tracker/ui/home/model/task_creation_draft.dart';
 import 'package:result_dart/result_dart.dart';
 
@@ -12,6 +13,14 @@ class HomeViewModel extends ChangeNotifier {
 
   bool _isLoading = false;
 
+  // The app bar UI state
+  final HomeAppBarUiState _appBarUiState = HomeAppBarUiState();
+
+  // Determines based upon properties inside app bar state
+  bool get isTasksFilterActive => _appBarUiState.isHideCompletedTasksIconActive;
+
+  HomeAppBarUiState get appBarUiState => _appBarUiState;
+
   bool get isTaskCompleted => _taskCreationDraft.completed;
 
   bool get isLoading => _isLoading;
@@ -21,7 +30,9 @@ class HomeViewModel extends ChangeNotifier {
 
   TaskCreationDraft get taskCreationDraft => _taskCreationDraft;
 
-  // Note: No manual pull to refresh is needed as the stream will emit new values automatically
+  // Note 1: No manual pull to refresh is needed as the stream will emit new values automatically
+  // Note 2: For task filtering, another method I came up with was filtering at the stream level
+  // but since the appBar needs raw list of tasks; that's why I ditched that
   Stream<List<Task>> get taskStream => _taskRepository.getTasksStream();
 
   Stream<int> get completedTaskCount => _taskRepository.getTasksStream().map(
@@ -102,5 +113,24 @@ class HomeViewModel extends ChangeNotifier {
     final Result<bool> result = await insertTask(task);
 
     return result;
+  }
+
+  void onFilterIconPressed() {
+    _appBarUiState.isFilterIconActive = !_appBarUiState.isFilterIconActive;
+    notifyListeners();
+  }
+
+  void onHideCompletedTasksIconPressed() {
+    _appBarUiState.isHideCompletedTasksIconActive =
+        !_appBarUiState.isHideCompletedTasksIconActive;
+    notifyListeners();
+  }
+
+  List<Task> filterTasksList(List<Task> taskList) {
+    if (_appBarUiState.isHideCompletedTasksIconActive) {
+      taskList = taskList.where((task) => !task.completed).toList();
+    }
+    // More filtering logic can be added in the future here
+    return taskList;
   }
 }
