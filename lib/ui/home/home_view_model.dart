@@ -115,11 +115,6 @@ class HomeViewModel extends ChangeNotifier {
     return result;
   }
 
-  void onFilterIconPressed() {
-    _appBarUiState.isFilterIconActive = !_appBarUiState.isFilterIconActive;
-    notifyListeners();
-  }
-
   void onHideCompletedTasksIconPressed() {
     _appBarUiState.isHideCompletedTasksIconActive =
         !_appBarUiState.isHideCompletedTasksIconActive;

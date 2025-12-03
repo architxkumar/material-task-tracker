@@ -1,44 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
-import 'package:material_task_tracker/ui/home/home_view_model.dart';
-import 'package:material_task_tracker/ui/home/widgets/app_bar/filter_button.dart';
 import 'package:material_task_tracker/ui/home/widgets/app_bar/filter_card.dart';
 import 'package:material_task_tracker/ui/home/widgets/app_bar/label.dart';
-import 'package:provider/provider.dart';
 
-class HomeAppBar extends StatelessWidget {
+class HomeAppBar extends StatefulWidget {
   final List<Task> taskList;
+  static const EdgeInsets containerPadding = EdgeInsets.all(
+    16.0,
+  );
 
   const HomeAppBar({super.key, required this.taskList});
 
   @override
+  State<HomeAppBar> createState() => _HomeAppBarState();
+}
+
+class _HomeAppBarState extends State<HomeAppBar> {
+  bool _isFilterIconSelected = false;
+
+  void _onToggleFilterIcon() {
+    setState(() {
+      _isFilterIconSelected = !_isFilterIconSelected;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final completedTasks = taskList.where((task) => task.completed).length;
-    final pendingTasks = taskList.length - completedTasks;
+    // NOTE: Keeping them inside build as they are dynamic in nature
+    final completedTasks = widget.taskList
+        .where((task) => task.completed)
+        .length;
+    final pendingTasks = widget.taskList.length - completedTasks;
     final String subtitle = (completedTasks != 0)
         ? '$pendingTasks active · $completedTasks completed'
         : '$pendingTasks active';
 
-    final BoxDecoration containerDecoration = BoxDecoration(
-      color: Theme.of(context).colorScheme.surfaceContainer,
-      border: BoxBorder.fromLTRB(
-        bottom: BorderSide(color: Theme.of(context).dividerColor),
-        left: BorderSide.none,
-        right: BorderSide.none,
-        top: BorderSide.none,
-      ),
-    );
-
-    final EdgeInsets containerPadding = const EdgeInsets.only(
-      top: 16,
-      left: 16,
-      right: 16,
-      bottom: 16,
-    );
-
     return Container(
-      decoration: containerDecoration,
-      padding: containerPadding,
+      decoration: _buildContainerDecoration(),
+      padding: HomeAppBar.containerPadding,
       child: SafeArea(
         // Note: It seems that the Center widget is necessary here to make the ConstrainedBox work as expected.
         // The constrained box was being passed tight constraints
@@ -54,14 +53,14 @@ class HomeAppBar extends StatelessWidget {
                   children: [
                     HomeAppBarLabel(subtitle: subtitle),
                     const Spacer(),
-                    const HomeAppBarFilterButton(),
+                    IconButton(
+                      isSelected: _isFilterIconSelected,
+                      icon: const Icon(Icons.tune_sharp),
+                      onPressed: _onToggleFilterIcon,
+                    ),
                   ],
                 ),
-                if (context
-                    .watch<HomeViewModel>()
-                    .appBarUiState
-                    .isFilterIconActive)
-                  const HomeAppBarFilterCard(),
+                if (_isFilterIconSelected) const HomeAppBarFilterCard(),
               ],
             ),
           ),
@@ -69,4 +68,14 @@ class HomeAppBar extends StatelessWidget {
       ),
     );
   }
+
+  BoxDecoration _buildContainerDecoration() => BoxDecoration(
+    color: Theme.of(context).colorScheme.surfaceContainer,
+    border: BoxBorder.fromLTRB(
+      bottom: BorderSide(color: Theme.of(context).dividerColor),
+      left: BorderSide.none,
+      right: BorderSide.none,
+      top: BorderSide.none,
+    ),
+  );
 }
