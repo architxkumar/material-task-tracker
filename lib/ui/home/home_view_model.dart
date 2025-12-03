@@ -13,13 +13,26 @@ class HomeViewModel extends ChangeNotifier {
 
   bool _isLoading = false;
 
+  // <----App Bar---->
+
   // The app bar UI state
   final HomeAppBarUiState _appBarUiState = HomeAppBarUiState();
 
-  // Determines based upon properties inside app bar state
-  bool get isTasksFilterActive => _appBarUiState.isHideCompletedTasksIconActive;
-
   HomeAppBarUiState get appBarUiState => _appBarUiState;
+
+  Stream<int> get completedTaskCount => _taskRepository.getTasksStream().map(
+    (tasks) => tasks.where((task) => task.completed).length,
+  );
+
+  Stream<int> get pendingTaskCount => _taskRepository.getTasksStream().map(
+    (tasks) => tasks.where((task) => !task.completed).length,
+  );
+
+  void onHideCompletedTasksIconPressed() {
+    _appBarUiState.isHideCompletedTasksIconActive =
+        !_appBarUiState.isHideCompletedTasksIconActive;
+    notifyListeners();
+  }
 
   bool get isTaskCompleted => _taskCreationDraft.completed;
 
@@ -34,14 +47,6 @@ class HomeViewModel extends ChangeNotifier {
   // Note 2: For task filtering, another method I came up with was filtering at the stream level
   // but since the appBar needs raw list of tasks; that's why I ditched that
   Stream<List<Task>> get taskStream => _taskRepository.getTasksStream();
-
-  Stream<int> get completedTaskCount => _taskRepository.getTasksStream().map(
-    (tasks) => tasks.where((task) => task.completed).length,
-  );
-
-  Stream<int> get pendingTaskCount => _taskRepository.getTasksStream().map(
-    (tasks) => tasks.where((task) => !task.completed).length,
-  );
 
   Future<int> nextSortOrder() async {
     final ResultDart<List<Task>, Exception> result = await _taskRepository
@@ -113,12 +118,6 @@ class HomeViewModel extends ChangeNotifier {
     final Result<bool> result = await insertTask(task);
 
     return result;
-  }
-
-  void onHideCompletedTasksIconPressed() {
-    _appBarUiState.isHideCompletedTasksIconActive =
-        !_appBarUiState.isHideCompletedTasksIconActive;
-    notifyListeners();
   }
 
   List<Task> filterTasksList(List<Task> taskList) {
