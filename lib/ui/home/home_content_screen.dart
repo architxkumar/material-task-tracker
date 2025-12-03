@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:material_task_tracker/ui/home/home_view_model.dart';
 import 'package:material_task_tracker/ui/home/widgets/app_bar/app_bar.dart';
-import 'package:material_task_tracker/ui/home/widgets/task_creation/button.dart';
+import 'package:material_task_tracker/ui/home/widgets/task_creation_field.dart';
 import 'package:material_task_tracker/ui/home/widgets/task_list/list.dart';
 import 'package:provider/provider.dart';
 
@@ -17,12 +17,16 @@ class HomeContentScreen extends StatelessWidget {
       taskList,
     );
     return Scaffold(
-      floatingActionButton: const AddTaskButton(),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 16.0,
         children: [
           // AppBar needs access to the raw tasks to display count of completed tasks
           HomeAppBar(taskList: taskList),
+          Container(
+            constraints: BoxConstraints(maxWidth: 600),
+            child: TaskCreationField(),
+          ),
           (taskList.isEmpty)
               ? const Expanded(
                   child: Center(

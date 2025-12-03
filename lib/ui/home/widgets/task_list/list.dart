@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:material_task_tracker/ui/home/home_view_model.dart';
 import 'package:material_task_tracker/ui/home/widgets/task_list/entry.dart';
-import 'package:material_task_tracker/ui/task_detail/task_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 class TaskList extends StatelessWidget {
@@ -19,24 +18,6 @@ class TaskList extends StatelessWidget {
         behavior: SnackBarBehavior.floating,
       ),
     );
-  }
-
-  Future<void> _handleTaskTap(BuildContext context, Task task) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TaskDetailScreen(
-          task: task,
-        ),
-      ),
-    );
-    if (context.mounted) {
-      if (result == true) {
-        _showSnackBar(context, 'Task deleted');
-      } else {
-        _showSnackBar(context, 'Failed to delete task');
-      }
-    }
   }
 
   Future<void> _handleTaskDismiss(BuildContext context, Task task) async {
@@ -60,7 +41,7 @@ class TaskList extends StatelessWidget {
               await _handleTaskDismiss(context, taskList[index]),
           key: ValueKey(taskList[index].id),
           child: GestureDetector(
-            onTap: () async => await _handleTaskTap(context, taskList[index]),
+            onTap: () => {},
             child: TaskListEntry(
               key: ValueKey(taskList[index].completed),
               task: taskList[index],
