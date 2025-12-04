@@ -33,6 +33,7 @@ class _TaskListEntryState extends State<TaskListEntry> {
         ),
       ),
       leading: Checkbox(
+        shape: const CircleBorder(),
         value: isChecked,
         onChanged: (value) async {
           final result = await widget.onChanged(
