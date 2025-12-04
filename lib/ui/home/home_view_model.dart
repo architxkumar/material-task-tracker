@@ -49,6 +49,7 @@ class HomeViewModel extends ChangeNotifier {
       title: title.trim(),
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      // TODO: Update sort order logic when adding filtering options
       sortOrder: 0,
     ),
   );
