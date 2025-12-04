@@ -26,18 +26,21 @@ class HomeContentScreen extends StatelessWidget {
           // AppBar needs access to the raw tasks to display count of completed tasks
           HomeAppBar(taskList: taskList),
           Container(
-            constraints: BoxConstraints(maxWidth: 600),
-            child: TaskCreationField(),
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: const TaskCreationField(),
           ),
-          (taskList.isEmpty)
-              ? const Expanded(
-                  child: Center(
+          Expanded(
+            child: (taskList.isEmpty)
+                ? const Center(
                     child: Text('No tasks found'),
+                  )
+                : Container(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: TaskList(
+                      taskList: filteredTasksList,
+                    ),
                   ),
-                )
-              : TaskList(
-                  taskList: filteredTasksList,
-                ),
+          ),
         ],
       ),
     );
