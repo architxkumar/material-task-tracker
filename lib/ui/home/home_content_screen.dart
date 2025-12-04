@@ -7,6 +7,8 @@ import 'package:material_task_tracker/ui/home/widgets/task_list/list.dart';
 import 'package:provider/provider.dart';
 
 class HomeContentScreen extends StatelessWidget {
+  // HACK: Using class constructor instead of dedicated state object
+  // TODO: Look at alternate approach to use state object for holding state for filtered and raw tasks
   final List<Task> taskList;
 
   const HomeContentScreen({super.key, required this.taskList});
