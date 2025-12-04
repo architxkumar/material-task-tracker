@@ -46,7 +46,7 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<Result<bool>> insertTask(String title) => _taskRepository.insertTask(
     Task(
-      title: title,
+      title: title.trim(),
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       sortOrder: 0,

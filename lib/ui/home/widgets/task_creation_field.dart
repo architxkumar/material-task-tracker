@@ -35,7 +35,7 @@ class _TaskCreationFieldState extends State<TaskCreationField> {
   void _onFormSubmitted() async {
     if (_formKey.currentState!.validate()) {
       // Validation ensures that the value being retrieved isn't whitespace
-      final String inputValue = _controller.text.trim();
+      final String inputValue = _controller.text;
       _controller.clear();
       _titleFieldFocusNode.unfocus();
       final result = await context.read<HomeViewModel>().insertTask(inputValue);
