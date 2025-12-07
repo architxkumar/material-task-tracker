@@ -71,4 +71,8 @@ class Task {
       sortOrder: sortOrder ?? this.sortOrder,
     );
   }
+  @override
+  String toString() {
+    return 'Task{id: $id, title: $title, body: $body, completed: $completed, dueDate: $dueDate, createdAt: $createdAt, updatedAt: $updatedAt, sortOrder: $sortOrder}';
+  }
 }
