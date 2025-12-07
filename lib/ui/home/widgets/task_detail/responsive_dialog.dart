@@ -15,6 +15,7 @@ class TaskDetailResponsiveDialog extends StatelessWidget {
               constraints: const BoxConstraints(maxWidth: 750),
               child: TaskDetailContainer(task: task),
             )
+          // FIX: Use DraggableScrollableSheet here
           : Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0),
