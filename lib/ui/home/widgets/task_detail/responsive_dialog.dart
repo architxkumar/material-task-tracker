@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:material_task_tracker/ui/home/widgets/task_detail/container.dart';
 
 class TaskDetailResponsiveDialog extends StatelessWidget {
-  final Task task;
 
-  const TaskDetailResponsiveDialog({super.key, required this.task});
+  const TaskDetailResponsiveDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => (constraints.maxWidth > 600)
-          ? Dialog(
-              constraints: const BoxConstraints(maxWidth: 750),
-              child: TaskDetailContainer(task: task),
+          ? const Dialog(
+              constraints: BoxConstraints(maxWidth: 750),
+              child: TaskDetailContainer(),
             )
           // FIX: Use DraggableScrollableSheet here
           : Dialog(
@@ -22,7 +20,7 @@ class TaskDetailResponsiveDialog extends StatelessWidget {
               ),
               insetPadding: const EdgeInsets.symmetric(horizontal: 8.0),
               alignment: Alignment.bottomCenter,
-              child: TaskDetailContainer(task: task),
+              child: const TaskDetailContainer(),
             ),
     );
   }

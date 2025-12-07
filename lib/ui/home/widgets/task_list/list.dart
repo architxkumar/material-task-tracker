@@ -36,24 +36,28 @@ class TaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: taskList.length,
-      itemBuilder: (context, index) => Dismissible(
-        onDismissed: (_) async =>
-            await _handleTaskDismiss(context, taskList[index]),
-        key: ValueKey(taskList[index].id),
-        child: GestureDetector(
-          onTap: () => showDialog(
-            context: context,
-            builder: (context) => TaskDetailResponsiveDialog(
-              task: taskList[index],
+      itemBuilder: (context, index) {
+        final Task task = taskList[index];
+        return Dismissible(
+          onDismissed: (_) async => await _handleTaskDismiss(context, task),
+          key: ValueKey(task.id),
+          child: GestureDetector(
+            onTap: () async {
+              context.read<HomeViewModel>().setSelectedTask(task);
+              await showDialog<void>(
+                context: context,
+                builder: (context) => const TaskDetailResponsiveDialog(),
+              );
+              // The clear task is being called in the dispose method of TaskDetailContainer
+            },
+            child: TaskListEntry(
+              key: ValueKey(task.completed),
+              task: task,
+              onChanged: context.read<HomeViewModel>().updateTask,
             ),
           ),
-          child: TaskListEntry(
-            key: ValueKey(taskList[index].completed),
-            task: taskList[index],
-            onChanged: context.read<HomeViewModel>().updateTask,
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

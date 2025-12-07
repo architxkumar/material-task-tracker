@@ -33,6 +33,28 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ---------------------------------------------------------------------------
+  // Task Detail Dialog
+  // ---------------------------------------------------------------------------
+
+  Task? _selectedTask;
+
+  Task? get selectedTask => _selectedTask;
+
+  void setSelectedTask(Task task) {
+    _selectedTask = task;
+    notifyListeners();
+  }
+
+  void clearSelectedTask() {
+    _selectedTask = null;
+    notifyListeners();
+  }
+
+  // ---------------------------------------------------------------------------
+  // General Task Operations
+  // ---------------------------------------------------------------------------
+
   // Note 1: No manual pull to refresh is needed as the stream will emit new values automatically
   // Note 2: For task filtering, another method I came up with was filtering at the stream level
   // but since the appBar needs raw list of tasks; that's why I ditched that
