@@ -23,13 +23,6 @@ class _TaskDetailContainerState extends State<TaskDetailContainer> {
      selectedTask = context.read<HomeViewModel>().selectedTask!;
   }
 
-
-  @override
-  void dispose() {
-    context.read<HomeViewModel>().clearSelectedTask();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(

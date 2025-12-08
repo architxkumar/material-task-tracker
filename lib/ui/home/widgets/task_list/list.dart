@@ -48,7 +48,9 @@ class TaskList extends StatelessWidget {
                 context: context,
                 builder: (context) => const TaskDetailResponsiveDialog(),
               );
-              // The clear task is being called in the dispose method of TaskDetailContainer
+              if (context.mounted) {
+                context.read<HomeViewModel>().clearSelectedTask();
+              }
             },
             child: TaskListEntry(
               key: ValueKey(task.completed),
