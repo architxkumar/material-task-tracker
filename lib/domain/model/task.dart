@@ -60,12 +60,13 @@ class Task {
     DateTime? updatedAt,
     int? sortOrder,
   }) {
+    // NOTE: `body` and `dueDate` can be explicitly set to `null` as the fields are nullable.
     return Task(
       id: id ?? this.id,
       title: title ?? this.title,
-      body: body ?? this.body,
+      body: body,
       completed: completed ?? this.completed,
-      dueDate: dueDate ?? this.dueDate,
+      dueDate: dueDate,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       sortOrder: sortOrder ?? this.sortOrder,
