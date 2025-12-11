@@ -46,9 +46,13 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearSelectedTask() {
-    _selectedTask = null;
-    notifyListeners();
+  Future<Result<bool>> updatedSelectedTask(Task task) async {
+    final result = await _taskRepository.updateTask(task);
+    if (result.isSuccess()) {
+      _selectedTask = task;
+      notifyListeners();
+    }
+    return result;
   }
 
   // ---------------------------------------------------------------------------

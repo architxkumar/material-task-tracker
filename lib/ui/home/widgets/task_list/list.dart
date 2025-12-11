@@ -48,9 +48,8 @@ class TaskList extends StatelessWidget {
                 context: context,
                 builder: (context) => const TaskDetailResponsiveDialog(),
               );
-              if (context.mounted) {
-                context.read<HomeViewModel>().clearSelectedTask();
-              }
+              // No need to clear selected task here because everytime a dialog is opened,
+              // the selected task is set again.
             },
             child: TaskListEntry(
               key: ValueKey(task.completed),
