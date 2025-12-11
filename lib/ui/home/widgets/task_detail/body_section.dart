@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
+import 'package:material_task_tracker/ui/core/ui/snack_bar.dart';
+import 'package:material_task_tracker/ui/home/home_view_model.dart';
+import 'package:provider/provider.dart';
 
 class TaskDetailBodySection extends StatelessWidget {
-  final Task task;
-
-  const TaskDetailBodySection({super.key, required this.task});
+  const TaskDetailBodySection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +16,23 @@ class TaskDetailBodySection extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DueDateField(task: task),
-            const SizedBox(height: 24,),
+            const DueDateField(),
+            const SizedBox(
+              height: 24,
+            ),
             const DescriptionField(),
-            const SizedBox(height: 24,),
+            const SizedBox(
+              height: 24,
+            ),
             const Divider(),
-            const SizedBox(height: 16,),
-            TimeLabel(label: 'Created', dateTime: task.createdAt),
-            const SizedBox(height: 8,),
-            TimeLabel(label: 'Last Updated', dateTime: task.updatedAt),
-
+            const SizedBox(
+              height: 16,
+            ),
+            TimeLabel(label: 'Created', dateTime: context.watch<HomeViewModel>().selectedTask?.createdAt),
+            const SizedBox(
+              height: 8,
+            ),
+            TimeLabel(label: 'Last Updated', dateTime: context.watch<HomeViewModel>().selectedTask?.updatedAt),
           ],
         ),
       ),
@@ -33,9 +41,7 @@ class TaskDetailBodySection extends StatelessWidget {
 }
 
 class DueDateField extends StatefulWidget {
-  final Task task;
-
-  const DueDateField({super.key, required this.task});
+  const DueDateField({super.key});
 
   @override
   State<DueDateField> createState() => _DueDateFieldState();
@@ -43,26 +49,24 @@ class DueDateField extends StatefulWidget {
 
 class _DueDateFieldState extends State<DueDateField> {
   bool _isHoveringOnDueDate = false;
-  DateTime? _dueDate;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme
-        .of(context)
-        .colorScheme;
-    final textTheme = Theme
-        .of(context)
-        .textTheme;
+    final Task task = context.watch<HomeViewModel>().selectedTask!;
+    final DateTime? dueDate = task.dueDate;
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     final Border borderStyle = _isHoveringOnDueDate
         ? Border.all(
-      color: colorScheme.primary,
-      width: 2.0,
-    )
+            color: colorScheme.primary,
+            width: 2.0,
+          )
         : Border.all(
-      color: colorScheme.outlineVariant,
-      width: 1.0,
-    );
+            color: colorScheme.outlineVariant,
+            width: 1.0,
+          );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -79,29 +83,33 @@ class _DueDateFieldState extends State<DueDateField> {
             ),
             Text(
               'Due Date',
-              style: TextTheme
-                  .of(context)
-                  .labelLarge,
+              style: TextTheme.of(context).labelLarge,
             ),
           ],
         ),
         InkWell(
-          onHover: (value) =>
-              setState(() {
-                _isHoveringOnDueDate = !_isHoveringOnDueDate;
-              }),
+          onHover: (value) => setState(() {
+            _isHoveringOnDueDate = !_isHoveringOnDueDate;
+          }),
           onTap: () async {
             final selectedDate = await showDatePicker(
               context: context,
               initialDate: DateTime.now(),
               firstDate: DateTime.now(),
-              lastDate: DateTime(DateTime
-                  .now()
-                  .year + 1, 12, 31),
+              lastDate: DateTime(DateTime.now().year + 1, 12, 31),
             );
-            setState(() {
-              _dueDate = selectedDate;
-            });
+            if (context.mounted) {
+              final result = await context.read<HomeViewModel>().updatedSelectedTask(
+                task.copyWith(dueDate: selectedDate),
+              );
+              if (context.mounted) {
+                if (result.isSuccess()) {
+                  showFloatingSnackBar(context, 'Due date updated');
+                } else {
+                  showFloatingSnackBar(context, 'Failed to update due date');
+                }
+              }
+            }
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
@@ -116,12 +124,11 @@ class _DueDateFieldState extends State<DueDateField> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _dueDate != null
-                      ? 'Due: ${_dueDate!.month}/${_dueDate!.day}/${_dueDate!
-                      .year}'
+                  dueDate != null
+                      ? 'Due: ${dueDate.month}/${dueDate.day}/${dueDate.year}'
                       : 'No date set',
                   style: textTheme.bodyMedium?.copyWith(
-                    color: _dueDate != null ? colorScheme.onSurface : null,
+                    color: dueDate != null ? colorScheme.onSurface : null,
                   ),
                 ),
                 Icon(
@@ -151,22 +158,18 @@ class _DescriptionFieldState extends State<DescriptionField> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme
-        .of(context)
-        .colorScheme;
-    final textTheme = Theme
-        .of(context)
-        .textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     final Border borderStyle = _isHovering
         ? Border.all(
-      color: colorScheme.primary,
-      width: 2.0,
-    )
+            color: colorScheme.primary,
+            width: 2.0,
+          )
         : Border.all(
-      color: colorScheme.outlineVariant,
-      width: 1.0,
-    );
+            color: colorScheme.outlineVariant,
+            width: 1.0,
+          );
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 16.0,
@@ -181,9 +184,7 @@ class _DescriptionFieldState extends State<DescriptionField> {
             ),
             Text(
               'Notes',
-              style: TextTheme
-                  .of(context)
-                  .labelLarge,
+              style: TextTheme.of(context).labelLarge,
             ),
           ],
         ),
@@ -192,9 +193,7 @@ class _DescriptionFieldState extends State<DescriptionField> {
           onExit: (_) => setState(() => _isHovering = false),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.all(
-                16.0
-            ),
+            padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               border: borderStyle,
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
@@ -203,8 +202,13 @@ class _DescriptionFieldState extends State<DescriptionField> {
             height: 180,
             width: double.infinity,
             child: TextField(
-              buildCounter: (context,
-                  {required currentLength, required isFocused, required maxLength}) => null,
+              buildCounter:
+                  (
+                    context, {
+                    required currentLength,
+                    required isFocused,
+                    required maxLength,
+                  }) => null,
               expands: true,
               maxLength: 2000,
               maxLengthEnforcement: MaxLengthEnforcement.enforced,
@@ -221,11 +225,15 @@ class _DescriptionFieldState extends State<DescriptionField> {
             ),
           ),
         ),
-        Row(children: [
-          const Spacer(),
-          SelectableText(
-              '${_controller.text.length}/2000', style: textTheme.bodySmall),
-        ],)
+        Row(
+          children: [
+            const Spacer(),
+            SelectableText(
+              '${_controller.text.length}/2000',
+              style: textTheme.bodySmall,
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -233,7 +241,7 @@ class _DescriptionFieldState extends State<DescriptionField> {
 
 class TimeLabel extends StatefulWidget {
   final String label;
-  final DateTime dateTime;
+  final DateTime? dateTime;
 
   const TimeLabel({super.key, required this.label, required this.dateTime});
 
@@ -253,15 +261,10 @@ class _TimeLabelState extends State<TimeLabel> {
           size: 16.0,
         ),
         Text(
-          '${widget.label}: ${widget.dateTime.month}/${widget.dateTime
-              .day}/${widget.dateTime.year} ${widget.dateTime.hour}:${widget
-              .dateTime.minute.toString().padLeft(2, '0')}',
-          style: TextTheme
-              .of(context)
-              .bodyMedium,
+          '${widget.label}: ${widget.dateTime?.month}/${widget.dateTime?.day}/${widget.dateTime?.year} ${widget.dateTime?.hour}:${widget.dateTime?.minute.toString().padLeft(2, '0')}',
+          style: TextTheme.of(context).bodyMedium,
         ),
       ],
     );
   }
 }
-
