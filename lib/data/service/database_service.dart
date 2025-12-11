@@ -70,6 +70,7 @@ class DatabaseService {
           dueDate: (task.dueDate != null)
               ? Value(task.dueDate!)
               : const Value.absent(),
+          createdAt: Value(task.createdAt),
           updatedAt: Value(DateTime.now()),
           sortOrder: Value(task.sortOrder),
           completed: Value(task.completed),

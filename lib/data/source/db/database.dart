@@ -12,12 +12,10 @@ class TodoItems extends Table {
     const Constant(false),
   )();
   late final Column<DateTime> dueDate = dateTime().nullable()();
-  late final Column<DateTime> createdAt = dateTime().withDefault(
-    currentDateAndTime,
-  )();
-  late final Column<DateTime> updatedAt = dateTime().withDefault(
-    currentDateAndTime,
-  )();
+  // NOTE: Since the values are being set in the service, we don't set
+  // default values here.
+  late final Column<DateTime> createdAt = dateTime()();
+  late final Column<DateTime> updatedAt = dateTime()();
   late final Column<int> sortOrder = integer().withDefault(
     const Constant(0),
   )();
