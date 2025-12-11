@@ -40,6 +40,12 @@ class _DescriptionFieldState extends State<DescriptionField> {
   @override
   void initState() {
     super.initState();
+    final selectedTask =
+        context
+            .read<HomeViewModel>()
+            .selectedTask;
+    _controller.text = selectedTask?.body ?? '';
+    _updatedText = _controller.text;
     // Updates the task body when text field is no longer focused
     _focusNode.addListener(() async {
       if (!_focusNode.hasFocus) {
