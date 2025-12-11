@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
-import 'package:material_task_tracker/ui/core/ui/snack_bar.dart';
+import 'package:material_task_tracker/ui/core/ui/overlay_toast.dart';
 import 'package:material_task_tracker/ui/home/home_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -28,11 +28,17 @@ class TaskDetailBodySection extends StatelessWidget {
             const SizedBox(
               height: 16,
             ),
-            TimeLabel(label: 'Created', dateTime: context.watch<HomeViewModel>().selectedTask?.createdAt),
+            TimeLabel(
+              label: 'Created',
+              dateTime: context.watch<HomeViewModel>().selectedTask?.createdAt,
+            ),
             const SizedBox(
               height: 8,
             ),
-            TimeLabel(label: 'Last Updated', dateTime: context.watch<HomeViewModel>().selectedTask?.updatedAt),
+            TimeLabel(
+              label: 'Last Updated',
+              dateTime: context.watch<HomeViewModel>().selectedTask?.updatedAt,
+            ),
           ],
         ),
       ),
@@ -99,14 +105,17 @@ class _DueDateFieldState extends State<DueDateField> {
               lastDate: DateTime(DateTime.now().year + 1, 12, 31),
             );
             if (context.mounted) {
-              final result = await context.read<HomeViewModel>().updatedSelectedTask(
+              final result = await context
+                  .read<HomeViewModel>()
+                  .updatedSelectedTask(
                 task.copyWith(dueDate: selectedDate),
               );
+
               if (context.mounted) {
                 if (result.isSuccess()) {
-                  showFloatingSnackBar(context, 'Due date updated');
+                  showOverlayToast(context, 'Due date updated');
                 } else {
-                  showFloatingSnackBar(context, 'Failed to update due date');
+                  showOverlayToast(context, 'Failed to update due date');
                 }
               }
             }
