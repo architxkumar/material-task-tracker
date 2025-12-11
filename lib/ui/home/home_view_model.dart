@@ -67,6 +67,8 @@ class HomeViewModel extends ChangeNotifier {
   Future<Result<bool>> deleteTask(Task task) =>
       _taskRepository.deleteTask(task);
 
+  // This method is should be used internally most of the time.
+  // Since, task can be marked completed from the task list itself.
   Future<Result<bool>> updateTask(Task task) =>
       _taskRepository.updateTask(task);
 
