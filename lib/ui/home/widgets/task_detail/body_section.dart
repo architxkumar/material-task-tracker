@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_task_tracker/ui/home/home_view_model.dart';
 import 'package:material_task_tracker/ui/home/widgets/task_detail/due_date.dart';
+import 'package:material_task_tracker/ui/home/widgets/task_detail/time_labe.dart';
 import 'package:provider/provider.dart';
 
 class TaskDetailBodySection extends StatelessWidget {
@@ -133,36 +134,6 @@ class _DescriptionFieldState extends State<DescriptionField> {
               style: textTheme.bodySmall,
             ),
           ],
-        ),
-      ],
-    );
-  }
-}
-
-class TimeLabel extends StatefulWidget {
-  final String label;
-  final DateTime? dateTime;
-
-  const TimeLabel({super.key, required this.label, required this.dateTime});
-
-  @override
-  State<TimeLabel> createState() => _TimeLabelState();
-}
-
-class _TimeLabelState extends State<TimeLabel> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      spacing: 8.0,
-      children: [
-        const Icon(
-          Icons.access_time,
-          size: 16.0,
-        ),
-        Text(
-          '${widget.label}: ${widget.dateTime?.month}/${widget.dateTime?.day}/${widget.dateTime?.year} ${widget.dateTime?.hour}:${widget.dateTime?.minute.toString().padLeft(2, '0')}',
-          style: TextTheme.of(context).bodyMedium,
         ),
       ],
     );
