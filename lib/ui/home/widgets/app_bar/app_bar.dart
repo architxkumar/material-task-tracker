@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:material_task_tracker/ui/home/widgets/app_bar/filter_card.dart';
 import 'package:material_task_tracker/ui/home/widgets/app_bar/label.dart';
+import 'package:material_task_tracker/ui/home/widgets/app_bar/sort_order_card.dart';
 
 class HomeAppBar extends StatefulWidget {
   final List<Task> taskList;
@@ -61,6 +62,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                   ],
                 ),
                 if (_isFilterIconSelected) const HomeAppBarFilterCard(),
+                if (_isFilterIconSelected) const SortOrderCard()
               ],
             ),
           ),

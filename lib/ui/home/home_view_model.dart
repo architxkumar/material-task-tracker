@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:material_task_tracker/data/repository/tasks_repository.dart';
+import 'package:material_task_tracker/data/repository/user_preference_repository.dart';
+import 'package:material_task_tracker/domain/model/sort.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:material_task_tracker/ui/home/model/app_bar.dart';
 import 'package:result_dart/result_dart.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  HomeViewModel(TaskRepository taskRepository)
-    : _taskRepository = taskRepository;
+  HomeViewModel(
+    TaskRepository taskRepository,
+    UserPreferenceRepository userPreferenceRepository,
+  ) : _taskRepository = taskRepository,
+      _userPreferenceRepository = userPreferenceRepository;
 
   final TaskRepository _taskRepository;
+  final UserPreferenceRepository _userPreferenceRepository;
 
   // ---------------------------------------------------------------------------
   // App Bar
   // ---------------------------------------------------------------------------
 
   // The app bar UI state
-  final HomeAppBarUiState _appBarUiState = HomeAppBarUiState();
+  HomeAppBarUiState _appBarUiState = HomeAppBarUiState();
 
   HomeAppBarUiState get appBarUiState => _appBarUiState;
 
@@ -30,6 +36,11 @@ class HomeViewModel extends ChangeNotifier {
   void onHideCompletedTasksIconPressed() {
     _appBarUiState.isHideCompletedTasksIconActive =
         !_appBarUiState.isHideCompletedTasksIconActive;
+    notifyListeners();
+  }
+
+  void onSortOrderSelectionChange(SortMode sortMode) {
+    _appBarUiState = _appBarUiState.copyWith(sortMode: sortMode);
     notifyListeners();
   }
 
@@ -83,9 +94,11 @@ class HomeViewModel extends ChangeNotifier {
   );
 
   List<Task> filterTasksList(List<Task> taskList) {
+    // Visibility filtering
     if (_appBarUiState.isHideCompletedTasksIconActive) {
       taskList = taskList.where((task) => !task.completed).toList();
     }
+    // Sort Order filtering
     // More filtering logic can be added in the future here
     return taskList;
   }
