@@ -112,6 +112,22 @@ class HomeViewModel extends ChangeNotifier {
       taskList = taskList.where((task) => !task.completed).toList();
     }
     // Sort Order filtering
+    if (_appBarUiState.sortMode == SortMode.createdAt) {
+      taskList.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    } else if (_appBarUiState.sortMode == SortMode.dueDate) {
+      taskList.sort((a, b) {
+        final aDate = a.dueDate;
+        final bDate = b.dueDate;
+
+        // Rule 1: nulls go last
+        if (aDate == null && bDate == null) return 0;
+        if (aDate == null) return 1;
+        if (bDate == null) return -1;
+
+        // Rule 2: both non-null then compare via date
+        return aDate.compareTo(bDate);
+      } );
+    }
     // More filtering logic can be added in the future here
     return taskList;
   }
