@@ -39,8 +39,21 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onSortOrderSelectionChange(SortMode sortMode) {
-    _appBarUiState = _appBarUiState.copyWith(sortMode: sortMode);
+  void onSortOrderSelectionChange(SortMode sortMode) async {
+    final result = await _userPreferenceRepository.setSortMode(sortMode);
+    if (result.isSuccess()) {
+      final result = await _userPreferenceRepository.getSortMode();
+      if (result.isSuccess()) {
+        final sortMode = result.getOrDefault(SortMode.createdAt);
+        _appBarUiState = _appBarUiState.copyWith(sortMode: sortMode);
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> loadUserSortOrderPreference() async {
+    final result = await _userPreferenceRepository.getSortMode();
+    _appBarUiState = _appBarUiState.copyWith(sortMode: result.getOrNull());
     notifyListeners();
   }
 
