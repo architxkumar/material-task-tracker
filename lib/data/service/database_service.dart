@@ -59,6 +59,14 @@ class DatabaseService {
       )
       .get();
 
+  Future<TodoItem> getTaskBySortOrder(int sortOrder) =>
+      (_database.select(
+              _database.todoItems,
+            )
+            ..where((tbl) => tbl.sortOrder.equals(sortOrder))
+            ..limit(1))
+          .getSingle();
+
   /// Returns `true` if any row was affected by the operation
   Future<bool> updateTask(Task task) => _database
       .update(_database.todoItems)
@@ -81,4 +89,54 @@ class DatabaseService {
   Future<int> deleteTask(Task task) => (_database.delete(
     _database.todoItems,
   )..where((tbl) => tbl.id.isValue(task.id))).go();
+
+  Future<int> decrementSortOrderAfterDeletion(int deletedSortOrder) {
+    final tbl = _database.todoItems;
+
+    return (_database.update(
+      tbl,
+    )..where((t) => t.sortOrder.isBiggerThanValue(deletedSortOrder))).write(
+      TodoItemsCompanion.custom(
+        sortOrder: tbl.sortOrder - const Constant(1),
+      ),
+    );
+  }
+
+  /// Increments the sort order for tasks having value equal or greater [targetSortOrder]
+  Future<int> incrementSortOrderForSelectedTask(int targetSortOrder) {
+    final tbl = _database.todoItems;
+    return (_database.update(tbl)..where(
+          (tbl) => tbl.sortOrder.isBiggerOrEqualValue(targetSortOrder),
+        ))
+        .write(
+          TodoItemsCompanion.custom(
+            sortOrder: tbl.sortOrder + const Constant(1),
+          ),
+        );
+  }
+
+  /// Decrement the sort order for tasks having value less than or equal to [targetSortOrder]
+  Future<int> decrementSortOrderForSelectedTask(int targetSortOrder) {
+    final tbl = _database.todoItems;
+    return (_database.update(tbl)..where(
+          (tbl) => tbl.sortOrder.isBiggerOrEqualValue(targetSortOrder),
+        ))
+        .write(
+          TodoItemsCompanion.custom(
+            sortOrder: tbl.sortOrder + const Constant(1),
+          ),
+        );
+  }
+
+  /// Decrements the sort order for tasks having value greater than [oldIndex]
+  Future<int> decrementSortOrderForRemainingTasks(int oldIndex) {
+    final tbl = _database.todoItems;
+    return (_database.update(
+      tbl,
+    )..where((tbl) => tbl.sortOrder.isBiggerThanValue(oldIndex))).write(
+      TodoItemsCompanion.custom(
+        sortOrder: tbl.sortOrder - const Constant(1),
+      ),
+    );
+  }
 }

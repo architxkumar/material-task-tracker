@@ -101,8 +101,6 @@ class HomeViewModel extends ChangeNotifier {
       title: title.trim(),
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
-      // TODO: Update sort order logic when adding filtering options
-      sortOrder: 0,
     ),
   );
 
@@ -128,7 +126,12 @@ class HomeViewModel extends ChangeNotifier {
         return aDate.compareTo(bDate);
       } );
     }
+    if (_appBarUiState.sortMode == SortMode.manual) {
+      taskList.sort((a, b) => a.sortOrder.compareTo(b.sortOrder),);
+    }
     // More filtering logic can be added in the future here
     return taskList;
   }
+
+  Future<Result<bool>> reorderTasks(int oldIndex, int newIndex) => _taskRepository.reorderTasks(oldIndex, newIndex);
 }

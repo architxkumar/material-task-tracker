@@ -16,7 +16,10 @@ class TaskRepository {
   /// Returns true if the task was inserted successfully
   Future<Result<bool>> insertTask(Task task) async {
     try {
-      await _databaseService.insertTask(task);
+      final taskListCount = (await _databaseService.getAllTasks()).length;
+      await _databaseService.insertTask(
+        task.copyWith(sortOrder: taskListCount),
+      );
       _logger.i('Task added successfully');
       return const Success(true);
     } catch (e, s) {
@@ -71,9 +74,13 @@ class TaskRepository {
   /// Returns true if the task was deleted successfully
   Future<Result<bool>> deleteTask(Task task) async {
     try {
+      final taskSortOrder = task.sortOrder;
       final int result = await _databaseService.deleteTask(task);
       if (result != 0) {
         _logger.i('Task deleted successfully');
+        // Alter the `sort_order` entry for all rows below
+        _databaseService.decrementSortOrderAfterDeletion(taskSortOrder);
+        _logger.i('Successfully decremented sort order for remaining rows');
         return const Success(true);
       } else {
         _logger.w('No rows affected');
@@ -81,6 +88,40 @@ class TaskRepository {
       }
     } catch (e, s) {
       _logger.e('Error deleting Task', error: e, stackTrace: s);
+      return (e is Exception) ? Failure(e) : Failure(Exception(e.toString()));
+    }
+  }
+
+  /// Reorders task in the last.
+  ///
+  /// The value of newIndex varies depending upon newIndex > oldIndex
+  ///
+  /// For more info, read the [docs](https://api.flutter.dev/flutter/widgets/ReorderCallback.html)
+  Future<Result<bool>> reorderTasks(int oldIndex, int newIndex) async {
+    final Task task = Task.fromToDoItem(
+      await _databaseService.getTaskBySortOrder(oldIndex),
+    );
+    try {
+      if (newIndex > oldIndex) {
+        // 1. Increase the value for tasks at or greater than the new Index
+        // 2. Update the value of sort order for the task
+        // 3. Update the sort order for elements greater than old index but smaller than new index
+        await _databaseService.incrementSortOrderForSelectedTask(newIndex);
+        _databaseService.updateTask(task.copyWith(sortOrder: newIndex));
+        await _databaseService.decrementSortOrderForRemainingTasks(oldIndex);
+      } else {
+        await _databaseService.incrementSortOrderForSelectedTask(newIndex);
+        _databaseService.updateTask(task.copyWith(sortOrder: newIndex));
+        await _databaseService.decrementSortOrderForRemainingTasks(oldIndex);
+      }
+      _logger.i('Incremented Task order');
+      return const Success(true);
+    } catch (e, s) {
+      _logger.e(
+        'Failure to update sort order after reordering',
+        stackTrace: s,
+        error: e,
+      );
       return (e is Exception) ? Failure(e) : Failure(Exception(e.toString()));
     }
   }
