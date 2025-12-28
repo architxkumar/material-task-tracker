@@ -1,13 +1,25 @@
 # Material Task Tracker
 
-A simple to-do app built with Material Design in Flutter.
+A local, Material Design–themed to-do application built with Flutter using Drift for persistence.
 
-## Features
-- Cross-platform: Android, iOS, Linux, macOS, Windows, and Web
-- Material Design UI
-- Task management: add, edit, delete tasks
+## 🚀 Features
+- **Task details**: title, description, and due date
+- **Task sorting**: by creation time, due date, or manual order
+- **State persistence**: restore the last selected task filter on app restart
+- **Task filtering**: hide completed tasks
 
-## Getting Started
+## 📸 Screenshots
+
+<p>
+  <img src="./screenshots/empty-state.jpg" alt="Empty state" width="220"/>
+  <img src="./screenshots/task-details.jpg" alt="Task details" width="220"/>
+  <img src="./screenshots/task-sorting-manual.jpg" alt="Manual sorting" width="220"/>
+  <img src="./screenshots/task-filter-completed.jpg" alt="Completed tasks filter" width="220"/>
+</p>
+
+
+
+## ▶️ Getting Started
 1. Install [Flutter](https://flutter.dev/docs/get-started/install).
 2. Clone this repository:
    ```
@@ -18,6 +30,6 @@ A simple to-do app built with Material Design in Flutter.
    flutter run
    ```
 
-## License
+## 📄 License
 [MIT LICENSE](LICENSE)
 
