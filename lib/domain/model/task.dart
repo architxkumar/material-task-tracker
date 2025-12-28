@@ -1,5 +1,7 @@
 // NOTE(architxkumar): Null fields inside this model represents optional fields in the database.
 
+import 'package:material_task_tracker/data/source/db/database.dart';
+
 /// Task models a task in the database.
 ///
 /// For inserting a new task, the [id] field can be left as default (0).
@@ -36,6 +38,7 @@ class Task {
   /// - `title`, `createdAt`, `updatedAt`, and `sortOrder` are required.
   /// - `body` and `dueDate` are optional.
   /// - `completed` defaults to `false`.
+  /// - `sortOrder` defaults to `0`
   Task({
     this.id = 0,
     required this.title,
@@ -44,7 +47,8 @@ class Task {
     this.dueDate,
     required this.createdAt,
     required this.updatedAt,
-    required this.sortOrder,
+    // Added default value to keep the property non-nullable and avoid passing the value from ViewModel to repository
+    this.sortOrder = 0,
   });
 
   /// Returns a copy of this [Task] with provided fields replaced.
@@ -71,8 +75,21 @@ class Task {
       sortOrder: sortOrder ?? this.sortOrder,
     );
   }
+
   @override
   String toString() {
     return 'Task{id: $id, title: $title, body: $body, completed: $completed, dueDate: $dueDate, createdAt: $createdAt, updatedAt: $updatedAt, sortOrder: $sortOrder}';
   }
+
+  static Task fromToDoItem(TodoItem entry) =>
+      Task(
+        id: entry.id,
+        title: entry.title,
+        body: entry.body,
+        completed: entry.completed,
+        dueDate: entry.dueDate,
+        createdAt: entry.createdAt,
+        updatedAt: entry.updatedAt,
+        sortOrder: entry.sortOrder,
+      );
 }
