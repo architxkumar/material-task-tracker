@@ -143,12 +143,20 @@ class HomeViewModel extends ChangeNotifier {
   Future<Result<bool>> reorderTasks(int oldIndex, int newIndex) =>
       _taskRepository.reorderTasks(oldIndex, newIndex);
 
-
-// ---------------------------------------------------------------------------
-// General List Operations
-// ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // General List Operations
+  // ---------------------------------------------------------------------------
 
   /// Stream of all lists in the database
   Stream<List<ListDomain>> get listsStream => _listRepository.watchLists();
 
+  Future<Result<bool>> insertList(String title) async {
+    final list = ListDomain(
+      title: title.trim(),
+      sortOrder: 0,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+    return await _listRepository.insertList(list);
+  }
 }

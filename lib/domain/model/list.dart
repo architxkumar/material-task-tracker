@@ -61,4 +61,26 @@ class ListDomain {
       color: item.color,
     );
   }
+
+  ListDomain copyWith({
+    int? id,
+    String? title,
+    int? sortOrder,
+    bool? isDefault,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? emoji,
+    String? color,
+  }) {
+    return ListDomain(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      sortOrder: sortOrder ?? this.sortOrder,
+      isDefault: isDefault ?? this.isDefault,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      emoji: emoji ?? this.emoji,
+      color: color ?? this.color,
+    );
+  }
 }

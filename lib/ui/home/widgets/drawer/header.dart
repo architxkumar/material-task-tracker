@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_task_tracker/ui/home/widgets/drawer/list_management_dialog.dart';
 
 class ListSelectionDrawerHeader extends StatelessWidget {
   const ListSelectionDrawerHeader({super.key});
@@ -13,18 +14,23 @@ class ListSelectionDrawerHeader extends StatelessWidget {
         children: [
           Text(
             'Lists',
-            style: TextTheme
-                .of(context)
-                .titleLarge,
+            style: TextTheme.of(context).titleLarge,
           ),
           Text(
             'Manage and switch between your task lists here.',
-            style: TextTheme
-                .of(context)
-                .bodySmall,
+            style: TextTheme.of(context).bodySmall,
           ),
-          const ListTile(
-            contentPadding: EdgeInsets.symmetric(
+          ListTile(
+            onTap: () {
+              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return ListManagementDialog();
+                },
+              );
+            },
+            contentPadding: const EdgeInsets.symmetric(
               horizontal: 4.0,
               vertical: 0,
             ),
@@ -36,3 +42,4 @@ class ListSelectionDrawerHeader extends StatelessWidget {
     );
   }
 }
+
