@@ -69,7 +69,8 @@ class $ListItemsTable extends ListItems
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -80,7 +81,8 @@ class $ListItemsTable extends ListItems
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   static const VerificationMeta _emojiMeta = const VerificationMeta('emoji');
   @override
@@ -153,16 +155,12 @@ class $ListItemsTable extends ListItems
         _createdAtMeta,
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
     }
     if (data.containsKey('emoji')) {
       context.handle(
@@ -413,14 +411,12 @@ class ListItemsCompanion extends UpdateCompanion<ListItem> {
     required String title,
     required int sortOrder,
     this.isDefault = const Value.absent(),
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.emoji = const Value.absent(),
     this.color = const Value.absent(),
   }) : title = Value(title),
-       sortOrder = Value(sortOrder),
-       createdAt = Value(createdAt),
-       updatedAt = Value(updatedAt);
+       sortOrder = Value(sortOrder);
   static Insertable<ListItem> custom({
     Expression<int>? id,
     Expression<String>? title,
@@ -1073,8 +1069,8 @@ typedef $$ListItemsTableCreateCompanionBuilder =
       required String title,
       required int sortOrder,
       Value<bool> isDefault,
-      required DateTime createdAt,
-      required DateTime updatedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<String?> emoji,
       Value<String?> color,
     });
@@ -1349,8 +1345,8 @@ class $$ListItemsTableTableManager
                 required String title,
                 required int sortOrder,
                 Value<bool> isDefault = const Value.absent(),
-                required DateTime createdAt,
-                required DateTime updatedAt,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<String?> emoji = const Value.absent(),
                 Value<String?> color = const Value.absent(),
               }) => ListItemsCompanion.insert(

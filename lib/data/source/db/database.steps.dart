@@ -41,9 +41,9 @@ final class Schema2 extends i0.VersionedSchema {
         _column_10,
         _column_11,
         _column_12,
-        _column_4,
-        _column_5,
         _column_13,
+        _column_14,
+        _column_15,
       ],
       attachedDatabase: database,
     ),
@@ -116,6 +116,9 @@ i1.GeneratedColumn<DateTime> _column_4(String aliasedName) =>
       aliasedName,
       false,
       type: i1.DriftSqlType.dateTime,
+      defaultValue: const CustomExpression(
+        'CAST(strftime(\'%s\', CURRENT_TIMESTAMP) AS INTEGER)',
+      ),
     );
 i1.GeneratedColumn<DateTime> _column_5(String aliasedName) =>
     i1.GeneratedColumn<DateTime>(
@@ -123,6 +126,9 @@ i1.GeneratedColumn<DateTime> _column_5(String aliasedName) =>
       aliasedName,
       false,
       type: i1.DriftSqlType.dateTime,
+      defaultValue: const CustomExpression(
+        'CAST(strftime(\'%s\', CURRENT_TIMESTAMP) AS INTEGER)',
+      ),
     );
 i1.GeneratedColumn<String> _column_6(String aliasedName) =>
     i1.GeneratedColumn<String>(
@@ -204,7 +210,21 @@ i1.GeneratedColumn<int> _column_12(String aliasedName) =>
       ),
       defaultValue: const CustomExpression('1'),
     );
-i1.GeneratedColumn<int> _column_13(String aliasedName) =>
+i1.GeneratedColumn<DateTime> _column_13(String aliasedName) =>
+    i1.GeneratedColumn<DateTime>(
+      'created_at',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.dateTime,
+    );
+i1.GeneratedColumn<DateTime> _column_14(String aliasedName) =>
+    i1.GeneratedColumn<DateTime>(
+      'updated_at',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.dateTime,
+    );
+i1.GeneratedColumn<int> _column_15(String aliasedName) =>
     i1.GeneratedColumn<int>(
       'sort_order',
       aliasedName,

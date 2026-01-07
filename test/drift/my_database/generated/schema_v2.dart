@@ -52,14 +52,20 @@ class ListItems extends Table with TableInfo<ListItems, ListItemsData> {
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const CustomExpression(
+      'CAST(strftime(\'%s\', CURRENT_TIMESTAMP) AS INTEGER)',
+    ),
   );
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const CustomExpression(
+      'CAST(strftime(\'%s\', CURRENT_TIMESTAMP) AS INTEGER)',
+    ),
   );
   late final GeneratedColumn<String> emoji = GeneratedColumn<String>(
     'emoji',
@@ -319,14 +325,12 @@ class ListItemsCompanion extends UpdateCompanion<ListItemsData> {
     required String title,
     required int sortOrder,
     this.isDefault = const Value.absent(),
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.emoji = const Value.absent(),
     this.color = const Value.absent(),
   }) : title = Value(title),
-       sortOrder = Value(sortOrder),
-       createdAt = Value(createdAt),
-       updatedAt = Value(updatedAt);
+       sortOrder = Value(sortOrder);
   static Insertable<ListItemsData> custom({
     Expression<int>? id,
     Expression<String>? title,
