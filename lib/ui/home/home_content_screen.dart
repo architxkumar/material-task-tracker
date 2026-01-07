@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:material_task_tracker/ui/home/home_view_model.dart';
 import 'package:material_task_tracker/ui/home/widgets/app_bar/app_bar.dart';
+import 'package:material_task_tracker/ui/home/widgets/drawer/drawer.dart';
 import 'package:material_task_tracker/ui/home/widgets/task_creation_field.dart';
 import 'package:material_task_tracker/ui/home/widgets/task_list/list.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,7 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
       widget.taskList,
     );
     return Scaffold(
+      drawer: const ListSelectionDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         spacing: 16.0,

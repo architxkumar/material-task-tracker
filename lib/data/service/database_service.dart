@@ -139,4 +139,8 @@ class DatabaseService {
       ),
     );
   }
+
+  /// Returns a stream of [ListItems] DAO from the database
+  Stream<List<ListItem>> watchLists() =>
+      _database.select(_database.listItems).watch();
 }

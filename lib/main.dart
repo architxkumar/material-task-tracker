@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:material_task_tracker/data/repository/list_repository.dart';
 import 'package:material_task_tracker/data/repository/tasks_repository.dart';
 import 'package:material_task_tracker/data/repository/user_preference_repository.dart';
 import 'package:material_task_tracker/data/source/db/database.dart';
@@ -20,6 +21,7 @@ void main() {
           create: (_) => HomeViewModel(
             TaskRepository(appDatabase, logger),
             UserPreferenceRepository(sharedPreferencesAsync, logger),
+            ListRepository(appDatabase, logger),
           ),
         ),
       ],

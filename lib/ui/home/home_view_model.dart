@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:material_task_tracker/data/repository/list_repository.dart';
 import 'package:material_task_tracker/data/repository/tasks_repository.dart';
 import 'package:material_task_tracker/data/repository/user_preference_repository.dart';
+import 'package:material_task_tracker/domain/model/list.dart';
 import 'package:material_task_tracker/domain/model/sort.dart';
 import 'package:material_task_tracker/domain/model/task.dart';
 import 'package:material_task_tracker/ui/home/model/app_bar.dart';
@@ -10,11 +12,14 @@ class HomeViewModel extends ChangeNotifier {
   HomeViewModel(
     TaskRepository taskRepository,
     UserPreferenceRepository userPreferenceRepository,
+    ListRepository listRepository,
   ) : _taskRepository = taskRepository,
-      _userPreferenceRepository = userPreferenceRepository;
+      _userPreferenceRepository = userPreferenceRepository,
+      _listRepository = listRepository;
 
   final TaskRepository _taskRepository;
   final UserPreferenceRepository _userPreferenceRepository;
+  final ListRepository _listRepository;
 
   // ---------------------------------------------------------------------------
   // App Bar
@@ -124,14 +129,26 @@ class HomeViewModel extends ChangeNotifier {
 
         // Rule 2: both non-null then compare via date
         return aDate.compareTo(bDate);
-      } );
+      });
     }
     if (_appBarUiState.sortMode == SortMode.manual) {
-      taskList.sort((a, b) => a.sortOrder.compareTo(b.sortOrder),);
+      taskList.sort(
+        (a, b) => a.sortOrder.compareTo(b.sortOrder),
+      );
     }
     // More filtering logic can be added in the future here
     return taskList;
   }
 
-  Future<Result<bool>> reorderTasks(int oldIndex, int newIndex) => _taskRepository.reorderTasks(oldIndex, newIndex);
+  Future<Result<bool>> reorderTasks(int oldIndex, int newIndex) =>
+      _taskRepository.reorderTasks(oldIndex, newIndex);
+
+
+// ---------------------------------------------------------------------------
+// General List Operations
+// ---------------------------------------------------------------------------
+
+  /// Stream of all lists in the database
+  Stream<List<ListDomain>> get listsStream => _listRepository.watchLists();
+
 }

@@ -45,8 +45,8 @@ class ListItems extends Table {
   )();
 
   // NOTE: The service will set these values
-  late final Column<DateTime> createdAt = dateTime()();
-  late final Column<DateTime> updatedAt = dateTime()();
+  late final Column<DateTime> createdAt = dateTime().withDefault(currentDateAndTime)();
+  late final Column<DateTime> updatedAt = dateTime().withDefault(currentDateAndTime)();
 
   /// Unicode value of the emoji
   /// E.g. U+1F600 for 😀
@@ -65,8 +65,8 @@ class AppDatabase extends _$AppDatabase {
   int get schemaVersion => 2;
 
   static const _defaultListQuery =
-      """INSERT INTO list_items (title, sort_order, is_default, created_at, updated_at)
-            VALUES ('My Tasks', 0, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+      """INSERT INTO list_items (title, sort_order, is_default)
+            VALUES ('My Tasks', 0, 1);
         """;
   static const _blockUpdatingDefaultListQuery = """
         CREATE TRIGGER IF NOT EXISTS block_updating_default_list

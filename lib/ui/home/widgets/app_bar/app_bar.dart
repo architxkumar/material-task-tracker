@@ -52,6 +52,10 @@ class _HomeAppBarState extends State<HomeAppBar> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    IconButton(onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    }, icon: const Icon(Icons.menu)),
+                    const SizedBox(width: 8.0),
                     HomeAppBarLabel(subtitle: subtitle),
                     const Spacer(),
                     IconButton(
