@@ -11,6 +11,7 @@ class ListManagementDialog extends StatefulWidget {
 }
 
 class _ListManagementDialogState extends State<ListManagementDialog> {
+  final _textController = TextEditingController();
   String _newListName = '';
 
   void _onTextFieldValueChanged(String value) {
@@ -31,6 +32,7 @@ class _ListManagementDialogState extends State<ListManagementDialog> {
         setState(() {
           _newListName = '';
         });
+        _textController.clear();
       } else {
         final errorMessage = result.exceptionOrNull().toString();
         showOverlayToast(context, 'Failed to create list: $errorMessage');
@@ -105,6 +107,8 @@ class _ListManagementDialogState extends State<ListManagementDialog> {
                     children: [
                       Expanded(
                         child: TextField(
+                          controller: _textController
+                          ,
                           onSubmitted: (_) async => await _onSubmitNewList(),
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.text,
